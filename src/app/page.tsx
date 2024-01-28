@@ -1,9 +1,18 @@
-import { ModeToggle } from "@/components/button/ModeToggle";
+"use client";
+
+import HeroSection from "@/components/homepage/HeroSection";
+import NavbarComponent from "@/components/homepage/NavbarComponent";
+import TrendingImage from "@/components/homepage/trending/TrendingImage";
 
 export default function Home() {
   return (
     <main>
-      <ModeToggle />
+      <NavbarComponent>
+        <div className="h-[1200px] mt-16">
+          <HeroSection />
+          <TrendingImage />
+        </div>
+      </NavbarComponent>
     </main>
   );
 }
