@@ -3,15 +3,23 @@ import {
   createLikeImage,
   dislikeImage,
   getLikeByImage,
+  getLikeByUser,
 } from "../services/likeApi";
 import useQueryNoRefecth from "../hooks/useQueryNoRefetch";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 
 export const useLikeByImage = (data) => {
   const axiosAuth = useAxiosAuth();
-  return useQueryNoRefecth(
-    ["like", data.image_id],
+  return useQueryNoRefecth(["like", data.image_id], async () =>
     getLikeByImage(axiosAuth, data.image_id)
+  );
+};
+
+export const useLikeByUser = (params) => {
+  const axiosAuth = useAxiosAuth();
+  return useQueryNoRefecth(
+    ["like", params.user_id],
+    async () => await getLikeByUser(axiosAuth, params)
   );
 };
 

@@ -1,25 +1,25 @@
 import axios from "@/lib/axios";
+import { convertToURI } from "@/utils/convertObjectToURI";
 
 export const getAllImage = (params) => {
-  return axios.get(`/image/${params}`);
+  const objString = convertToURI(params);
+  return axios.get(`/image/${objString}`);
+};
+
+export const getImagesBySearch = (params) => {
+  const objString = convertToURI(params);
+  return axios.get(`/image/search${objString}`);
 };
 
 export const getDetailImage = (id) => {
   return axios.get(`/image/${id}`);
 };
 
+export const getImagesByUser = (params) => {
+  const objString = convertToURI(params);
+  return axios.get(`/image/user/${objString}`);
+};
+
 export const getTrendingImage = () => {
   return axios.get(`/image/trending`);
 };
-
-// const axiosAuth = useAxiosAuth();
-// const [image, setImage] = useState({});
-// console.log("🚀 ~ GalleryPage ~ image:", image);
-// const getImages = async () => {
-//   try {
-//     const res = await axiosAuth.get("http://localhost:5000/api/image");
-//     setImage(res.data);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
