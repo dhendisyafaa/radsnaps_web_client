@@ -1,8 +1,7 @@
 "use client";
 
+import SeachBarComponent from "@/components/form/SeachBarComponent";
 import GalleryGridView from "@/components/gallery/GalleryGridView";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Select,
@@ -12,44 +11,53 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { Clock4, Flame, Globe, Search, Sparkles } from "lucide-react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useAllImage } from "../../api/resolver/imageResolver";
+import { Flame, Sparkles } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useAllImage } from "../api/resolver/imageResolver";
 
 export default function GalleryPage() {
   const pathname = usePathname();
-  const filterName = pathname.split("/");
-  const filterValue = filterName[2];
+  const params = useSearchParams();
+  const filterValue = params.get("filter");
   const [selectedFilter, setSelectedFilter] = useState(filterValue);
-  const { data: images, isLoading, isSuccess } = useAllImage(selectedFilter);
+  const {
+    data: images,
+    isLoading,
+    isError,
+    error,
+  } = useAllImage({
+    filter: selectedFilter,
+  });
   const { push } = useRouter();
 
+  const currUrl = `${pathname}?${params}`;
+
   if (isLoading) return <p>load...</p>;
+  if (isError) return <p>error: {error}</p>;
 
   const image = images.data.data;
 
   const handleValueChange = (value) => {
     setSelectedFilter(value);
-    push(`/gallery/${value}`);
+    push(`/gallery?filter=${value}`);
   };
 
   const FILTERS = [
     {
       label: "Trending",
       icon: <Flame />,
-      href: "/gallery/trending",
+      href: "/gallery?filter=trending",
     },
     {
       label: "Newest",
       icon: <Sparkles />,
-      href: "/gallery/newest",
+      href: "/gallery?filter=newest",
     },
     {
       label: "Oldest",
       icon: <Sparkles />,
-      href: "/gallery/oldest",
+      href: "/gallery?filter=oldest",
     },
   ];
 
@@ -59,19 +67,18 @@ export default function GalleryPage() {
         <ScrollArea className="max-w-[600px] lg:max-w-none hidden md:block">
           <div className="flex items-center">
             {FILTERS.map((filter, index) => (
-              <Link
-                href={filter.href}
+              <div
+                onClick={() => handleValueChange(filter.label.toLowerCase())}
                 key={filter.href}
                 className={cn(
-                  "flex h-7 items-center justify-center rounded-full px-4 text-center text-sm transition-colors hover:text-primary",
-                  pathname?.startsWith(filter.href) ||
-                    (index === 0 && pathname === "/")
+                  "flex h-7 items-center justify-center rounded-full px-4 text-center text-sm transition-colors hover:text-primary cursor-pointer",
+                  currUrl === filter.href
                     ? "bg-muted font-medium text-primary"
                     : "text-muted-foreground"
                 )}
               >
                 {filter.label}
-              </Link>
+              </div>
             ))}
           </div>
           <ScrollBar orientation="horizontal" className="invisible" />
@@ -108,15 +115,15 @@ export default function GalleryPage() {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex w-full max-w-72 md:max-w-lg items-center space-x-2">
-          <Input type="text" placeholder="Mountain view" />
-          <Button type="submit">
-            <Search className="w-3 md:w-5" />
-          </Button>
-        </div>
+        <SeachBarComponent />
       </div>
       {image.length != 0 ? (
-        <GalleryGridView image={image} />
+        <GalleryGridView
+          image={image}
+          className={
+            "columns-2 gap-3 lg:gap-5 space-y-5 sm:columns-3 lg:columns-4 xl:columns-5"
+          }
+        />
       ) : (
         <p>Empty state for get all image</p>
       )}
