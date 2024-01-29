@@ -18,7 +18,6 @@ export default function CommentSection({ imageId }) {
 
   if (isLoading) return <p>load...</p>;
   const comment = comments.data.data;
-  console.log("🚀 ~ CommentSection ~ comment:", comment);
 
   return (
     <div>

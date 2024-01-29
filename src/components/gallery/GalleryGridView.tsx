@@ -12,14 +12,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import ButtonLike from "../button/ButtonLike";
+import { cn } from "@/lib/utils";
 
-export default function GalleryGridView({ image }) {
+export default function GalleryGridView({ image, withLike = true, className }) {
   const { push } = useRouter();
   return (
-    <div className="columns-2 gap-3 lg:gap-5 space-y-5 sm:columns-3 lg:columns-4 xl:columns-5 mb-44">
+    <div className={cn(`mb-10`, className)}>
       {image.map((item) => {
         return (
-          <div key={item.id}>
+          <div key={item.id} className="flex flex-col">
             <div className="group overflow-hidden relative rounded-lg">
               <Link href={`/gallery/detail/${item.id}`}>
                 <Image
@@ -33,11 +34,13 @@ export default function GalleryGridView({ image }) {
                   className="w-full object-cover object-center cursor-pointer transition-all ease-in-out group-hover:scale-105"
                 />
               </Link>
-              <ButtonLike
-                likes={item.like}
-                image_id={item.id}
-                className={"absolute bottom-3 right-1"}
-              />
+              {withLike && (
+                <ButtonLike
+                  likes={item.like}
+                  image_id={item.id || item.image_id}
+                  className={"absolute bottom-3 right-1"}
+                />
+              )}
             </div>
             <div className="flex items-center justify-between gap-1 p-1 pt-1.5">
               <div

@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import SeachBarComponent from "../form/SeachBarComponent";
 
 export default function HeroSection() {
   return (
@@ -15,12 +16,7 @@ export default function HeroSection() {
         Framing the world&apos;s wonders in{" "}
         <span className="text-primary">every snap</span>
       </p>
-      <div className="flex w-full max-w-lg items-center space-x-2 mb-12">
-        <Input type="text" placeholder="Mountain view" />
-        <Button type="submit">
-          <Search className="w-5" />
-        </Button>
-      </div>
+      <SeachBarComponent className="max-w-lg" />
     </div>
   );
 }

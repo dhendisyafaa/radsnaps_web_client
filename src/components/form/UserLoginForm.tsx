@@ -25,7 +25,7 @@ export default function UserLoginForm() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const params = searchParams.get("callbackUrl");
-  const callbackUrl = params || "/gallery/trending";
+  const callbackUrl = params || "/gallery?filter=trending";
 
   const formSchema = z.object({
     email: z
@@ -71,7 +71,6 @@ export default function UserLoginForm() {
         });
       }
     } catch (error) {
-      console.log("🚀 ~ onSubmit ~ error:", error);
       setloadingButton(false);
       if (error.response) {
         toast({

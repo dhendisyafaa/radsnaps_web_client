@@ -68,7 +68,7 @@ export default function UserRegisterForm() {
           description: "Anda akan langsung diarahkan ke halaman gallery",
         });
         setloadingButton(false);
-        push("/gallery/trending");
+        push("/gallery?filter=trending");
       } else {
         setloadingButton(false);
         toast({

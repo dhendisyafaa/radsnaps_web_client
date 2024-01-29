@@ -20,7 +20,7 @@ export default function TrendingImage() {
         </p>
         <Button
           className="rounded-full font-semibold px-8 md:block hidden"
-          onClick={() => push("/gallery/trending")}
+          onClick={() => push("/gallery?filter=trending")}
         >
           Our Gallery
         </Button>

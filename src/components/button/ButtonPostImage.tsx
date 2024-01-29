@@ -1,18 +1,17 @@
 "use client";
-import { ImagePlus } from "lucide-react";
-import React from "react";
-import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function ButtonPostImage() {
   const { data: session } = useSession();
   const { push } = useRouter();
 
-  if (!session) return null;
   return (
-    <Button variant={"ghost"} size={"icon"} onClick={() => push("/posting")}>
-      <ImagePlus className="h-[1.2rem] w-[1.2rem] text-foreground" />
-    </Button>
+    <Link href={"/posting"}>
+      <div className="bg-primary rounded-full px-6 py-2 text-xs font-bold hidden md:block w-fit text-center text-white">
+        Posting
+      </div>
+    </Link>
   );
 }
