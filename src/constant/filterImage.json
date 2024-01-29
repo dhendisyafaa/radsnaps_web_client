@@ -1,0 +1,10 @@
+[
+  {
+    "label": "Terpopular",
+    "icon": "<Flame />"
+  },
+  {
+    "label": "Terbaru",
+    "icon": "<Clock4 />"
+  }
+]
