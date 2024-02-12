@@ -1,24 +1,22 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
-import { Button } from "../ui/button";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import {
-  Album,
-  Bookmark,
   GalleryHorizontal,
   GalleryVerticalEnd,
   Home,
   Plus,
-  Save,
   UserRound,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export default function NavigationButton() {
   const pathname = usePathname();
   const params = useSearchParams();
   const filterValue = params.get("filter");
+  // const { username } = useDecodedToken();
+  const username = "test";
 
   const currUrl = filterValue ? `${pathname}?filter=${filterValue}` : pathname;
 
@@ -88,11 +86,11 @@ export default function NavigationButton() {
         </div>
       </Link>
       <div className="md:hidden">
-        <Link href="/profile">
+        <Link href={`/profile/${username}`}>
           <div
             className={cn(
               "px-6 py-2 text-xs font-bold rounded-full",
-              currUrl === "/profile"
+              pathname.startsWith("/profile")
                 ? "bg-primary text-white"
                 : "bg-background text-foreground"
             )}
@@ -105,34 +103,5 @@ export default function NavigationButton() {
         </Link>
       </div>
     </div>
-    // <div className="flex gap-3 p-2 mx-1 md:mx-0 rounded-full items-center justify-around shadow-[0px_-1px_30px_0px_#7c3aed8b] md:shadow-md min-w-max bg-background">
-    //   {NAVIGATION.map((nav, index) => {
-    //     const isGalleryPath = pathname.startsWith("/gallery");
-
-    //     const isGalleryActive =
-    //       isGalleryPath &&
-    //       (currUrl === nav.link ||
-    //         (pathname.startsWith("/gallery/") &&
-    //           nav.link === "/gallery?filter=trending"));
-
-    //     return (
-    //       <Link key={index} href={nav.link}>
-    //         <div
-    //           className={cn(
-    //             isGalleryActive || currUrl === nav.link
-    //               ? "bg-primary text-white"
-    //               : "bg-background text-foreground",
-    //             nav?.className
-    //           )}
-    //         >
-    //           <div className="md:hidden [&_svg]:h-5 [&_svg]:w-5">
-    //             {nav.icon}
-    //           </div>
-    //           <div className="hidden md:block">{nav.name}</div>
-    //         </div>
-    //       </Link>
-    //     );
-    //   })}
-    // </div>
   );
 }

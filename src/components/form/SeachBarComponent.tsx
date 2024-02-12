@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Search } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
@@ -16,6 +16,9 @@ import { cn } from "@/lib/utils";
 
 export default function SeachBarComponent({ className = "max-w-md" }) {
   const { push } = useRouter();
+  const params = useSearchParams();
+  const q = params.get("q");
+  const decodeURI = q?.replace(/-/g, " ");
 
   const formSchema = z.object({
     search: z.string().min(2).max(50),
@@ -24,7 +27,7 @@ export default function SeachBarComponent({ className = "max-w-md" }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      search: "",
+      search: `${decodeURI || ""}`,
     },
   });
 

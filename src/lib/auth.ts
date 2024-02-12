@@ -47,6 +47,7 @@ export const authOptions: NextAuthOptions = {
         token.accessToken = user.data.data.accessToken;
         token.refreshToken = user.data.data.refreshToken;
         token.user_id = user.data.data.id;
+        token.role = user.data.data.role;
       }
       if (account?.provider === "google") {
         const email = {
@@ -57,6 +58,7 @@ export const authOptions: NextAuthOptions = {
           token.accessToken = result.data.data.accessToken;
           token.refreshToken = result.data.data.refreshToken;
           token.user_id = result.data.data.id;
+          token.role = result.data.data.role;
         }
       }
       return token;

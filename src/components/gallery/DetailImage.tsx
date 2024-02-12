@@ -38,17 +38,18 @@ export default function DetailImage({ imageId }) {
               {detailImage.image_title}
             </p>
             <div>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-end mb-2">
                 <p className="text-base font-semibold leading-none tracking-tight">
                   Description
                 </p>
                 <div className="flex items-center justify-end gap-3 p-3">
                   <ButtonLike
-                    likes={detailImage.like}
+                    likes={detailImage.likes}
                     image_id={detailImage.id}
                     className={"md:text-xs md:[&_svg]:h-6 md:[&_svg]:w-6"}
                   />
                   <ButtonSaveToAlbum
+                    image_id={detailImage.id}
                     className={"md:text-xs md:[&_svg]:h-6 md:[&_svg]:w-6"}
                   />
                   <ButtonShare

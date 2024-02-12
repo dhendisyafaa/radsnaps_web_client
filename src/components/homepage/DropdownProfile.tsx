@@ -1,6 +1,6 @@
 "use client";
 
-import { useDecodedToken } from "@/utils/useDecodedToken";
+import { useDecodedToken } from "@/hooks/useDecodedToken";
 import { Menu } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "../button/ModeToggle";
@@ -22,7 +22,7 @@ export default function DropdownProfile() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size={"icon"} className="rounded-full">
+        <Button variant="ghost" size={"icon"}>
           <Menu />
         </Button>
       </DropdownMenuTrigger>

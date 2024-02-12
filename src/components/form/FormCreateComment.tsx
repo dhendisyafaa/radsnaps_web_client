@@ -83,7 +83,7 @@ export default function FormCreateComment() {
       <div className="w-full">
         {!session ? (
           <Button
-            className="w-full rounded-full text-primary-foreground"
+            className="w-full text-primary-foreground"
             onClick={() => signIn()}
           >
             Login to add comment

@@ -18,6 +18,8 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "../ui/input";
 import Image from "next/image";
+import Link from "next/link";
+import LoadingThreeDoots from "../common/loader/LoadingThreeDoots";
 
 export default function UserLoginForm() {
   const [loadingButton, setloadingButton] = React.useState<boolean>(false);
@@ -57,8 +59,7 @@ export default function UserLoginForm() {
       });
       if (!signInData?.error) {
         toast({
-          title: "Yeay, berhasil login!",
-          description: "Anda akan langsung diarahkan ke halaman gallery",
+          title: "You are successfully logged in!",
         });
         setloadingButton(false);
         push(callbackUrl);
@@ -66,8 +67,8 @@ export default function UserLoginForm() {
         setloadingButton(false);
         toast({
           variant: "destructive",
-          title: "Gagal untuk login!",
-          description: "Email tidak ditemukan",
+          title: "Failed to login!",
+          description: "Email not found",
         });
       }
     } catch (error) {
@@ -76,7 +77,7 @@ export default function UserLoginForm() {
         toast({
           variant: "destructive",
           title: `${
-            error.response?.data?.message || "Email atau kata sandi salah"
+            error.response?.data?.message || "Email or password is incorrect"
           }`,
         });
       }
@@ -85,6 +86,15 @@ export default function UserLoginForm() {
 
   return (
     <div className={cn("grid gap-6")}>
+      <div className="text-sm flex items-center justify-center gap-1">
+        <p>Don&apos;t have an account? </p>
+        <Link
+          href={"/auth/register"}
+          className="font-bold text-primary no-underline hover:underline"
+        >
+          Sign Up
+        </Link>
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <FormField
@@ -122,8 +132,7 @@ export default function UserLoginForm() {
             )}
           />
           <Button disabled={loadingButton} className="w-full">
-            {/* {loadingButton && <LoadingOval />} */}
-            Sign in
+            {loadingButton ? <LoadingThreeDoots color="#fff" /> : "Sign in"}
           </Button>
         </form>
       </Form>

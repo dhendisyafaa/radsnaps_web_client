@@ -21,6 +21,7 @@ export default function PostsByUser({ user_id }) {
         <GalleryGridView
           image={image}
           withLike={false}
+          withOverlay={false}
           className={"columns-2 md:columns-3 gap-3 mt-4"}
         />
       ) : (

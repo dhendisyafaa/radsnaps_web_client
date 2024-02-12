@@ -23,3 +23,18 @@ export const getImagesByUser = (params) => {
 export const getTrendingImage = () => {
   return axios.get(`/image/trending`);
 };
+
+export const postImage = (auth, data) => {
+  return auth.post("/image", data, {
+    headers: { "content-type": "multipart/form-data" },
+  });
+};
+
+export const addImageToAlbum = (auth, data) => {
+  return auth.post("/image-album", data);
+};
+
+export const deleteImageInAlbum = (auth, params) => {
+  const objString = convertToURI(params);
+  return auth.delete(`/image-album/${objString}`);
+};

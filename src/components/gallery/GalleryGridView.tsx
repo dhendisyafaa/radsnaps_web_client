@@ -1,28 +1,48 @@
 "use client";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Bookmark, MoreHorizontal, Share } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
-import ButtonLike from "../button/ButtonLike";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import ButtonLike from "../button/ButtonLike";
+import ButtonSaveToAlbum from "../button/ButtonSaveToAlbum";
+import DrawerDialogShare from "../drawer/DrawerShareContent";
+import { useLongPress } from "use-long-press";
 
-export default function GalleryGridView({ image, withLike = true, className }) {
+export default function GalleryGridView({
+  image,
+  withLike = true,
+  withButtonShare = true,
+  withOverlay = true,
+  className,
+}) {
+  const [imageLoading, setImageLoading] = useState(true);
+  const [imageId, setImageId] = useState("");
   const { push } = useRouter();
+  const [drawerShare, setDrawerShare] = useState(false);
+  const baseUrl = window.location.origin;
+
+  const bind = useLongPress((...params) =>
+    handleDrawerShare(params[1].context)
+  );
+
+  const handleDrawerShare = (image_id) => {
+    setImageId(image_id);
+    setDrawerShare(true);
+  };
+
   return (
     <div className={cn(`mb-10`, className)}>
+      <DrawerDialogShare
+        open={drawerShare}
+        onOpenChange={setDrawerShare}
+        url={`${baseUrl}/gallery/detail/${imageId}`}
+      />
       {image.map((item) => {
         return (
-          <div key={item.id} className="flex flex-col">
+          <div key={item.id} {...bind(item.id)} className="flex flex-col">
             <div className="group overflow-hidden relative rounded-lg">
-              <Link href={`/gallery/detail/${item.id}`}>
+              <div onClick={() => push(`/gallery/detail/${item.id}`)}>
                 <Image
                   src={item.image_url}
                   alt={`image ${item.image_name} from owner ${item.owner.username}`}
@@ -30,43 +50,40 @@ export default function GalleryGridView({ image, withLike = true, className }) {
                   width={item.width}
                   height={item.height}
                   quality={75}
-                  // placeholder="blur"
-                  className="w-full object-cover object-center cursor-pointer transition-all ease-in-out group-hover:scale-105"
+                  onLoadingComplete={() => setImageLoading(false)}
+                  className={cn(
+                    "w-full object-cover object-center cursor-pointer transition-all ease-in-out group-hover:scale-105",
+                    imageLoading
+                      ? "grayscale blur-2xl scale-110"
+                      : "grayscale-0 blur-0 scale-100"
+                  )}
                 />
-              </Link>
-              {withLike && (
-                <ButtonLike
-                  likes={item.like}
-                  image_id={item.id || item.image_id}
-                  className={"absolute bottom-3 right-1"}
-                />
-              )}
-            </div>
-            <div className="flex items-center justify-between gap-1 p-1 pt-1.5">
-              <div
-                key={item.id}
-                className="text-xs text-primary-foreground truncate"
-              >
-                {item.image_title}
               </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-6 w-6 p-0 rounded-full">
-                    <span className="sr-only">Open menu</span>
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => {}}>
-                    <Bookmark className={`w-4 h-4`} />
-                    Save to album
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => {}}>
-                    <Share className={`w-4 h-4`} />
-                    Share
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {withOverlay && (
+                <>
+                  <div className="w-full h-10 bg-gradient-to-t from-[#030712]/80 absolute bottom-0 left-0"></div>
+                  <div
+                    key={item.id}
+                    className="text-xs font-medium text-primary-foreground truncate w-[70%] absolute bottom-3 left-3"
+                  >
+                    {item.image_title}
+                  </div>
+                  <div className="flex flex-col gap-3 absolute bottom-3 right-2">
+                    {withLike && (
+                      <ButtonLike
+                        likes={item.likes}
+                        image_id={item.id || item.image_id}
+                      />
+                    )}
+                    {withButtonShare && (
+                      <ButtonSaveToAlbum
+                        image_id={item.id || item.image_id}
+                        withLabel={false}
+                      />
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         );

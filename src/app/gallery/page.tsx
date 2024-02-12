@@ -15,6 +15,8 @@ import { Flame, Sparkles } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useAllImage } from "../api/resolver/imageResolver";
+import { Skeleton } from "@/components/ui/skeleton";
+import SkeletonGallery from "@/components/common/skeleton/SkeletonGallery";
 
 export default function GalleryPage() {
   const pathname = usePathname();
@@ -33,7 +35,7 @@ export default function GalleryPage() {
 
   const currUrl = `${pathname}?${params}`;
 
-  if (isLoading) return <p>load...</p>;
+  if (isLoading) return <SkeletonGallery />;
   if (isError) return <p>error: {error}</p>;
 
   const image = images.data.data;
@@ -62,7 +64,7 @@ export default function GalleryPage() {
   ];
 
   return (
-    <div className="py-10 flex flex-col gap-8">
+    <div className="pb-10 flex flex-col gap-8">
       <div className="flex justify-between items-center gap-3">
         <ScrollArea className="max-w-[600px] lg:max-w-none hidden md:block">
           <div className="flex items-center">
