@@ -23,3 +23,11 @@ export const createAlbum = (auth, data) => {
     headers: { "content-type": "multipart/form-data" },
   });
 };
+
+export const updateDetailAlbum = (auth, id, data) => {
+  return auth.patch(`/album/${id}`, data);
+};
+
+export const deleteAlbum = (auth, id) => {
+  return auth.delete(`/album/${id}`);
+};
