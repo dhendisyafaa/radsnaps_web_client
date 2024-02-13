@@ -25,7 +25,10 @@ export default function AlbumGridView({
             className="bg-muted rounded-md overflow-hidden"
           >
             <Image
-              src={album.album_cover}
+              src={
+                album.album_cover ||
+                "https://images.unsplash.com/photo-1514539079130-25950c84af65?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              }
               alt={`cover album id ${album.id}`}
               fill
               onLoadingComplete={() => setImageLoading(false)}
