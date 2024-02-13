@@ -62,6 +62,7 @@ export default function UserLoginForm() {
           title: "You are successfully logged in!",
         });
         setloadingButton(false);
+        form.reset();
         push(callbackUrl);
       } else {
         setloadingButton(false);

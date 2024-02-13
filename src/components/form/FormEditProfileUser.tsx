@@ -17,8 +17,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { useUserByUsername } from "../api/resolver/userResolver";
-import { useDecodedToken } from "@/hooks/useDecodedToken";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const profileFormSchema = z.object({
@@ -76,6 +74,7 @@ export default function FormEditProfileUser({ profile }) {
 
   async function onSubmit(data: ProfileFormValues) {
     console.log("🚀 ~ onSubmit ~ data:", data);
+    //  form.reset();
   }
 
   return (

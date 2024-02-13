@@ -70,6 +70,7 @@ export default function UserRegisterForm() {
           description: "You will be directed to the gallery page",
         });
         setloadingButton(false);
+        form.reset();
         push("/gallery?filter=trending");
       } else {
         setloadingButton(false);

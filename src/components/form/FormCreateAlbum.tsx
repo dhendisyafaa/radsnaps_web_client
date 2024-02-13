@@ -1,6 +1,5 @@
 "use client";
 import { useCreateAlbum } from "@/app/api/resolver/albumResolver";
-import { usePostImage } from "@/app/api/resolver/imageResolver";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import {
@@ -15,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { useDecodedToken } from "@/hooks/useDecodedToken";
+import { useUserData } from "@/hooks/useUserData";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import Image from "next/image";
@@ -28,8 +27,8 @@ export default function FormCreateAlbum() {
   const { toast } = useToast();
   const [selectedFile, setSelectedFile] = useState();
   const [preview, setPreview] = useState();
-  const { mutateAsync: createAlbum } = useCreateAlbum();
-  const { user_id } = useDecodedToken();
+  const { mutateAsync: createAlbum, isPending } = useCreateAlbum();
+  const { user_id } = useUserData();
   const [openDialog, setOpenDialog] = useState(false);
 
   const formSchema = z.object({
@@ -54,13 +53,12 @@ export default function FormCreateAlbum() {
         owner_id: user_id,
         data_image: selectedFile,
       };
-
       await createAlbum(data);
-
       toast({
         title: "Yeah, success create your album!",
         description: "Get ready to have your album seen by many people",
       });
+      form.reset();
       setOpenDialog(false);
     } catch (error) {
       console.log("error:", error);
@@ -97,16 +95,14 @@ export default function FormCreateAlbum() {
 
   return (
     <Drawer open={openDialog} onClose={() => setOpenDialog(false)}>
-      <DrawerTrigger>
-        <Button
-          variant={"outline"}
-          className="flex items-center gap-2"
-          onClick={() => setOpenDialog(true)}
-        >
-          <Plus />
-          <p className="hidden md:block">Create album</p>
-        </Button>
-      </DrawerTrigger>
+      <Button
+        variant={"outline"}
+        className="flex items-center gap-2"
+        onClick={() => setOpenDialog(true)}
+      >
+        <Plus />
+        <p className="hidden md:block">Create album</p>
+      </Button>
       <DrawerContent className="max-h-[90vh]">
         <div className="container py-10 overflow-y-auto">
           <Form {...form}>
@@ -126,7 +122,7 @@ export default function FormCreateAlbum() {
                                 accept="image/*"
                                 name="data_image"
                                 type="file"
-                                disabled={isSubmitting}
+                                disabled={isSubmitting || isPending}
                                 onChange={onSelectFile}
                               />
                             </FormControl>
@@ -157,7 +153,7 @@ export default function FormCreateAlbum() {
                               accept="image/*"
                               name="data_image"
                               type="file"
-                              disabled={isSubmitting}
+                              disabled={isSubmitting || isPending}
                               onChange={onSelectFile}
                             />
                           </FormControl>
@@ -173,7 +169,7 @@ export default function FormCreateAlbum() {
                     )}
                   />
                 )}
-                <div className="flex flex-col gap-2">
+                <div className="space-y-8">
                   <FormField
                     control={form.control}
                     name="album_name"
@@ -183,7 +179,7 @@ export default function FormCreateAlbum() {
                         <FormControl>
                           <Input
                             placeholder="The Middle Ages"
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || isPending}
                             {...field}
                           />
                         </FormControl>
@@ -216,7 +212,7 @@ export default function FormCreateAlbum() {
                         <FormControl>
                           <Input
                             placeholder="Castle, Historical, England"
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || isPending}
                             {...field}
                           />
                         </FormControl>
@@ -231,9 +227,9 @@ export default function FormCreateAlbum() {
                     <Button
                       type="submit"
                       className="w-full md:w-fit flex items-center gap-2"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || isPending}
                     >
-                      {isSubmitting && <LoadingOval />}
+                      {isSubmitting || (isPending && <LoadingOval />)}
                       Create album
                     </Button>
                   </div>
