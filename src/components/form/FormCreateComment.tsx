@@ -54,13 +54,6 @@ export default function FormCreateComment() {
         token: session?.user.accessToken,
       };
       await createCommentByImage(data);
-      // isSuccess
-      //   ? toast({
-      //       title: "Create new comment",
-      //       description: `${variables.comment.comment_content}`,
-      //     })
-      //   : null;
-
       form.reset();
     } catch (error) {
       console.log("error", error);
@@ -68,56 +61,43 @@ export default function FormCreateComment() {
   }
 
   return (
-    <>
-      {/*   {isSuccess &&
-        toast({
-          title: "Comment created!",
-        })}
-      {isError &&
-        toast({
-          variant: "destructive",
-          title: "Cannot create comment",
-          description: "Errors occur when making comment",
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        })} */}
-      <div className="w-full">
-        {!session ? (
-          <Button
-            className="w-full text-primary-foreground"
-            onClick={() => signIn()}
+    <div className="w-full">
+      {!session ? (
+        <Button
+          className="w-full text-primary-foreground"
+          onClick={() => signIn()}
+        >
+          Login to add comment
+        </Button>
+      ) : (
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex items-center gap-1 w-full"
           >
-            Login to add comment
-          </Button>
-        ) : (
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex items-center gap-1 w-full"
-            >
-              <FormField
-                control={form.control}
-                name="comment_content"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Add comment"
-                        className="rounded-full"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" size="icon" variant="ghost">
-                <Send className="w-5 text-primary" />
-              </Button>
-            </form>
-          </Form>
-        )}
-      </div>
-    </>
+            <FormField
+              control={form.control}
+              name="comment_content"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Add comment"
+                      className="rounded-full"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" size="icon" variant="ghost">
+              <Send className="w-5 text-primary" />
+            </Button>
+          </form>
+        </Form>
+      )}
+    </div>
   );
 }
