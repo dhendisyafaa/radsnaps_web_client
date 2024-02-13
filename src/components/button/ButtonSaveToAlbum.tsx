@@ -1,44 +1,33 @@
 "use client";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
-import { Bookmark, Check } from "lucide-react";
-import Image from "next/image";
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "../ui/button";
 import { useAlbumsByUser } from "@/app/api/resolver/albumResolver";
-import { useDecodedToken } from "@/hooks/useDecodedToken";
-import { relativeTimeSuffix } from "@/utils/relativeTime";
-import FormCreateAlbum from "../form/FormCreateAlbum";
 import {
   useDeleteImageInAlbum,
   useImageToAlbum,
 } from "@/app/api/resolver/imageResolver";
-import LoadingOval from "../common/loader/LoadingOval";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useUserData } from "@/hooks/useUserData";
+import { cn } from "@/lib/utils";
+import { relativeTimeSuffix } from "@/utils/relativeTime";
+import { Bookmark, Check } from "lucide-react";
+import { signIn } from "next-auth/react";
+import Image from "next/image";
+import { useState } from "react";
 import LoadingThreeDoots from "../common/loader/LoadingThreeDoots";
+import FormCreateAlbum from "../form/FormCreateAlbum";
+import { Button } from "../ui/button";
 
 export default function ButtonSaveToAlbum({
   className,
   image_id,
   withLabel = true,
 }) {
-  const { user_id } = useDecodedToken();
+  const { user_id, status } = useUserData();
   const [modalSelectAlbum, setModalSelectAlbum] = useState(false);
   const {
     data: albumsUser,
@@ -76,6 +65,7 @@ export default function ButtonSaveToAlbum({
         image_id,
       });
     } catch (error) {
+      // FIX add toast for if delete image in album failed
       console.log("error", error);
     }
   };
@@ -91,7 +81,9 @@ export default function ButtonSaveToAlbum({
           `flex flex-col gap-1 text-center items-center text-xs [&_svg]:h-5 [&_svg]:w-5 lg:[&_svg]:h-6 lg:[&_svg]:w-6 cursor-pointer`,
           className
         )}
-        onClick={() => setModalSelectAlbum(true)}
+        onClick={() =>
+          status === "unauthenticated" ? signIn() : setModalSelectAlbum(true)
+        }
       >
         {imageIsSaved.includes(true) ? (
           <Bookmark className="text-primary fill-primary" />
@@ -135,8 +127,11 @@ export default function ButtonSaveToAlbum({
                   <div className="flex items-center gap-3">
                     <div className="relative h-16 w-16 rounded-md overflow-hidden">
                       <Image
-                        src={album.album_cover}
-                        alt="test"
+                        src={
+                          album.album_cover ||
+                          "https://images.unsplash.com/photo-1514539079130-25950c84af65?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        }
+                        alt={`album ${album.id} cover`}
                         fill
                         className="object-cover"
                       />

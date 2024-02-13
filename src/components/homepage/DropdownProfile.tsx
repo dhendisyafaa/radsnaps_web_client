@@ -1,6 +1,6 @@
 "use client";
 
-import { useDecodedToken } from "@/hooks/useDecodedToken";
+import { useUserData } from "@/hooks/useUserData";
 import { Menu } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "../button/ModeToggle";
@@ -16,7 +16,7 @@ import {
 } from "../ui/dropdown-menu";
 
 export default function DropdownProfile() {
-  const { username, email } = useDecodedToken();
+  const { username, email } = useUserData();
   const { push } = useRouter();
 
   return (

@@ -1,25 +1,8 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { useUserByUsername } from "../api/resolver/userResolver";
-import { useDecodedToken } from "@/hooks/useDecodedToken";
 import FormEditProfileUser from "@/components/form/formEditProfileUser";
+import { useUserData } from "@/hooks/useUserData";
+import { useUserByUsername } from "../api/resolver/userResolver";
 
 const defaultValues: Partial<ProfileFormValues> = {
   username: "",
@@ -33,7 +16,7 @@ const defaultValues: Partial<ProfileFormValues> = {
 };
 
 export default function ProfileForm() {
-  const { username } = useDecodedToken();
+  const { username } = useUserData();
   const { data: profileUser, isLoading } = useUserByUsername(username);
   if (isLoading) return <p>load...</p>;
 

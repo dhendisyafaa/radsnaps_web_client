@@ -1,5 +1,6 @@
 "use client";
 
+import { useUserData } from "@/hooks/useUserData";
 import { cn } from "@/lib/utils";
 import {
   GalleryHorizontal,
@@ -15,8 +16,7 @@ export default function NavigationButton() {
   const pathname = usePathname();
   const params = useSearchParams();
   const filterValue = params.get("filter");
-  // const { username } = useDecodedToken();
-  const username = "test";
+  const { username } = useUserData();
 
   const currUrl = filterValue ? `${pathname}?filter=${filterValue}` : pathname;
 
