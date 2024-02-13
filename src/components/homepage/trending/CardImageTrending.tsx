@@ -24,7 +24,7 @@ export default function CardImageTrending() {
     <Marquee
       direction="left"
       speed={30}
-      delay={2}
+      delay={1}
       pauseOnHover={true}
       gradient={true}
       gradientColor={"#030712"}
