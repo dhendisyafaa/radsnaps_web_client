@@ -1,16 +1,17 @@
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useQueryNoRefecth from "../hooks/useQueryNoRefetch";
 import {
   addImageToAlbum,
   deleteImageInAlbum,
   getAllImage,
   getDetailImage,
+  getImageByAlbum,
   getImagesBySearch,
   getImagesByUser,
   getTrendingImage,
   postImage,
 } from "../services/imageApi";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useAllImage = (params) => {
   return useQueryNoRefecth(
@@ -30,6 +31,13 @@ const useDetailImage = (id) => {
   return useQueryNoRefecth(["image", id], async () => await getDetailImage(id));
 };
 
+const useImageByAlbum = (id) => {
+  return useQueryNoRefecth(
+    ["image-album", id],
+    async () => await getImageByAlbum(id)
+  );
+};
+
 const useImagesByUser = (params) => {
   return useQueryNoRefecth(
     ["image", params.user_id],
@@ -46,12 +54,11 @@ const usePostImage = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => postImage(axiosAuth, data),
-    // onSettled: (data, variables, context) => {
-    // queryClient.invalidateQueries({
-    //   queryKey: ["comment", context.comment.image_id],
-    // });
-    // },
-    // mutationKey: ["addComment"],
+    onSettled: async (data, variables, context) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["images"],
+      });
+    },
   });
 };
 
@@ -65,7 +72,7 @@ const useImageToAlbum = () => {
         queryKey: ["albums"],
       });
       await queryClient.invalidateQueries({
-        queryKey: ["album", context.album_id],
+        queryKey: ["album", `${context.album_id}`],
       });
     },
   });
@@ -81,7 +88,7 @@ const useDeleteImageInAlbum = () => {
         queryKey: ["albums"],
       });
       await queryClient.invalidateQueries({
-        queryKey: ["album", context.album_id],
+        queryKey: ["album", `${context.album_id}`],
       });
     },
   });
@@ -89,11 +96,12 @@ const useDeleteImageInAlbum = () => {
 
 export {
   useAllImage,
+  useDeleteImageInAlbum,
   useDetailImage,
-  useTrendingImage,
+  useImageByAlbum,
+  useImageToAlbum,
   useImagesBySearch,
   useImagesByUser,
   usePostImage,
-  useImageToAlbum,
-  useDeleteImageInAlbum,
+  useTrendingImage,
 };

@@ -1,5 +1,13 @@
 "use client";
+import LoadingOval from "@/components/common/loader/LoadingOval";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -12,23 +20,31 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { useDecodedToken } from "@/hooks/useDecodedToken";
+import { useUserData } from "@/hooks/useUserData";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Replace } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { usePostImage } from "../api/resolver/imageResolver";
 
 export default function PostingNewImage() {
-  const { toast } = useToast();
   const [selectedFile, setSelectedFile] = useState();
   const [preview, setPreview] = useState();
-  const { mutateAsync: postImage } = usePostImage();
-  const { user_id } = useDecodedToken();
+  const { mutateAsync: postImage, isPending } = usePostImage();
+  const { user_id } = useUserData();
+  const { toast } = useToast();
+  const { push } = useRouter();
+
   const formSchema = z.object({
-    image_title: z.string().min(2).max(50),
-    image_description: z.string().min(2),
+    image_title: z.string().min(2).max(100, {
+      message: "Image title maximum 100 characters",
+    }),
+    image_description: z.string().min(2).max(500, {
+      message: "Image description maximum 500 characters",
+    }),
     tags: z.string(),
   });
 
@@ -49,13 +65,14 @@ export default function PostingNewImage() {
         owner_id: user_id,
         data_image: selectedFile,
       };
-
-      await postImage(data);
+      const responseUpload = await postImage(data);
       toast({
-        title: "Yeah, berhasil login!",
-        description: "Anda akan langsung diarahkan ke halaman gallery",
+        title: "Successfully uploaded your photo!",
+        description:
+          "Make sure your photos can be searched by users according to the tags you provide",
       });
-      push("/gallery?filter=trending");
+      push(`/gallery/detail/${responseUpload?.data?.data.id}`);
+      form.reset();
     } catch (error) {
       console.log("error:", error);
       if (error.response) {
@@ -89,6 +106,8 @@ export default function PostingNewImage() {
     setSelectedFile(e.target.files[0]);
   };
 
+  const isSubmitting = form.formState.isSubmitting;
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -101,14 +120,19 @@ export default function PostingNewImage() {
                   name="data_image"
                   render={({ field: { onChange, value, ...rest } }) => (
                     <FormItem>
+                      <FormLabel className="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-full text-xs [&_svg]:h-5 [&_svg]:w-5 font-medium text-center py-2 px-3 cursor-pointer flex items-center gap-2">
+                        <Replace />
+                        Change image
+                      </FormLabel>
                       <FormControl>
                         <Input
-                          {...rest}
+                          className="hidden"
                           accept="image/*"
                           name="data_image"
                           type="file"
-                          disabled={form.formState.isSubmitting}
+                          disabled={form.formState.isSubmitting || isPending}
                           onChange={onSelectFile}
+                          {...rest}
                         />
                       </FormControl>
                       <FormMessage />
@@ -137,11 +161,11 @@ export default function PostingNewImage() {
                         accept="image/*"
                         name="data_image"
                         type="file"
-                        disabled={form.formState.isSubmitting}
+                        disabled={form.formState.isSubmitting || isPending}
                         onChange={onSelectFile}
                       />
                     </FormControl>
-                    <FormLabel className="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-md text-xs font-medium text-center py-1 px-3">
+                    <FormLabel className="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-full text-xs font-medium text-center py-1 px-3 cursor-pointer">
                       Choose Image
                     </FormLabel>
                   </div>
@@ -153,7 +177,7 @@ export default function PostingNewImage() {
               )}
             />
           )}
-          <div>
+          <div className="space-y-8">
             <FormField
               control={form.control}
               name="image_title"
@@ -161,7 +185,11 @@ export default function PostingNewImage() {
                 <FormItem>
                   <FormLabel>Image Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Historical Alnwick Castle" {...field} />
+                    <Input
+                      placeholder="Historical Alnwick Castle"
+                      disabled={form.formState.isSubmitting || isPending}
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>
                     Title image must match the selected image
@@ -177,7 +205,10 @@ export default function PostingNewImage() {
                 <FormItem>
                   <FormLabel>Image Description</FormLabel>
                   <FormControl>
-                    <Textarea {...field} />
+                    <Textarea
+                      disabled={form.formState.isSubmitting || isPending}
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>
                     Describe the image you chose
@@ -195,6 +226,7 @@ export default function PostingNewImage() {
                   <FormControl>
                     <Input
                       placeholder="Castle, Historical, England"
+                      disabled={form.formState.isSubmitting || isPending}
                       {...field}
                     />
                   </FormControl>
@@ -205,12 +237,29 @@ export default function PostingNewImage() {
                 </FormItem>
               )}
             />
+            {selectedFile !== undefined ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-xl">Image information</CardTitle>
+                  <CardDescription>
+                    information of the image you selected
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="text-sm text-foreground">
+                  <p>Filename: {selectedFile.name}</p>
+                  <p>Size: {selectedFile.size}</p>
+                  <p>Type: {selectedFile.type}</p>
+                </CardContent>
+              </Card>
+            ) : null}
           </div>
         </div>
         <Button
+          disabled={form.formState.isSubmitting || isPending}
           type="submit"
           className="w-full md:w-fit md:absolute md:-top-4 md:right-5 z-50"
         >
+          {isPending && <LoadingOval className={"mr-3"} />}
           Posting
         </Button>
         <div>
@@ -221,88 +270,5 @@ export default function PostingNewImage() {
         </div>
       </form>
     </Form>
-
-    // <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    // <div className="relative min-h-[50vh] md:min-h-screen max-h-screen border rounded-lg">
-    //   <Image
-    //     // src="https://images.unsplash.com/photo-1514539079130-25950c84af65?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y2FzdGxlfGVufDB8fDB8fHww"
-    //     src="https://images.unsplash.com/photo-1571504211935-1c936b327411?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FzdGxlfGVufDB8fDB8fHww"
-    //     alt="test"
-    //     fill={true}
-    //     quality={10}
-    //     className="object-contain"
-    //   />
-    // </div>
-    //   <div>
-    //     <Form {...form}>
-    //       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-    //         <FormField
-    //           control={form.control}
-    //           name="image_title"
-    //           render={({ field }) => (
-    //             <FormItem>
-    //               <FormLabel>Image Title</FormLabel>
-    //               <FormControl>
-    //                 <Input placeholder="Historical Alnwick Castle" {...field} />
-    //               </FormControl>
-    //               <FormDescription>
-    //                 Title image must match the selected image
-    //               </FormDescription>
-    //               <FormMessage />
-    //             </FormItem>
-    //           )}
-    //         />
-    //         <FormField
-    //           control={form.control}
-    //           name="image_description"
-    //           render={({ field }) => (
-    //             <FormItem>
-    //               <FormLabel>Image Description</FormLabel>
-    //               <FormControl>
-    //                 <Textarea {...field} />
-    //               </FormControl>
-    //               <FormDescription>
-    //                 Describe the image you chose
-    //               </FormDescription>
-    //               <FormMessage />
-    //             </FormItem>
-    //           )}
-    //         />
-    //         <FormField
-    //           control={form.control}
-    //           name="tags"
-    //           render={({ field }) => (
-    //             <FormItem>
-    //               <FormLabel>Tags</FormLabel>
-    //               <FormControl>
-    //                 <Input
-    //                   placeholder="Castle, Historical, England"
-    //                   {...field}
-    //                 />
-    //               </FormControl>
-    //               <FormDescription>
-    //                 Separate tags with a comma. Ex: market, food
-    //               </FormDescription>
-    //               <FormMessage />
-    //             </FormItem>
-    //           )}
-    //         />
-    //         <Button
-    //           type="submit"
-    //           variant={"default"}
-    //           className="absolute -top-3 right-5 z-50"
-    //         >
-    //           Posting
-    //         </Button>
-    //         <div>
-    //           <p className="text-center text-xs text-muted-foreground">
-    //             The title and tags you give to this photo will determine the
-    //             image search results
-    //           </p>
-    //         </div>
-    //       </form>
-    //     </Form>
-    //   </div>
-    // </div>
   );
 }

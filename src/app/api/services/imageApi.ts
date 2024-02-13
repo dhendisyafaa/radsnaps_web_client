@@ -15,6 +15,10 @@ export const getDetailImage = (id) => {
   return axios.get(`/image/${id}`);
 };
 
+export const getImageByAlbum = (id) => {
+  return axios.get(`/image/album/${id}`);
+};
+
 export const getImagesByUser = (params) => {
   const objString = convertToURI(params);
   return axios.get(`/image/user/${objString}`);
