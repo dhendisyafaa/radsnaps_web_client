@@ -9,7 +9,7 @@ export default function AlbumPage() {
   return (
     <NavbarComponent>
       <div className="container mt-24 pb-44 flex flex-col gap-8 ">
-        <div className="flex justify-between items-center gap-3">
+        <div className="flex justify-between items-center w-full gap-3">
           <FormCreateAlbum />
           <SeachBarComponent />
         </div>
