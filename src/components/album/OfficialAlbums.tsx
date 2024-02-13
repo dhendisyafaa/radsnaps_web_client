@@ -3,10 +3,9 @@ import AlbumGridView from "./AlbumGridView";
 import SkeletonAlbum from "../common/skeleton/SkeletonAlbum";
 
 export default function OfficialAlbums() {
-  const { data: dataOfficialAlbums, isLoading: officialAlbumsLoading } =
-    useAllOfficialAlbum();
+  const { data: dataOfficialAlbums, isLoading } = useAllOfficialAlbum();
 
-  if (officialAlbumsLoading) return <SkeletonAlbum />;
+  if (isLoading) return <SkeletonAlbum />;
   const officialAlbums = dataOfficialAlbums.data.data;
 
   return (

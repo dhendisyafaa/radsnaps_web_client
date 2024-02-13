@@ -1,10 +1,15 @@
 "use client";
 import { useDetailAlbum } from "@/app/api/resolver/albumResolver";
 import ImagesAlbum from "@/components/album/ImagesAlbum";
+import SkeletonDetailAlbum from "@/components/common/skeleton/SkeletonDetailAlbum";
+import AlertDeleteAlbum from "@/components/dialog/AlertDeleteAlbum";
+import FormEditAlbum from "@/components/form/FormEditAlbum";
 import NavbarComponent from "@/components/homepage/NavbarComponent";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useUserData } from "@/hooks/useUserData";
 import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -12,11 +17,19 @@ import { useRouter } from "next/navigation";
 export default function DetailAlbumPage({ params }) {
   const { data: detailAlbum, isLoading } = useDetailAlbum(params.id);
   const { back } = useRouter();
+  const { user_id, status } = useUserData();
 
-  if (isLoading) return <p>load...</p>;
+  if (isLoading)
+    return (
+      <NavbarComponent>
+        <div className="mt-28 px-12 md:px-44 container">
+          <SkeletonDetailAlbum />
+        </div>
+      </NavbarComponent>
+    );
   const album = detailAlbum.data.data;
-
   const topFiveTags = album.tags.slice(0, 5);
+
   return (
     <NavbarComponent
       customBackground="bg-transparent"
@@ -49,26 +62,43 @@ export default function DetailAlbumPage({ params }) {
             <p className="text-foreground font-semibold">Back</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            {topFiveTags.map((tag, index) => (
-              <Badge key={index} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
+            {topFiveTags !== "" &&
+              topFiveTags.map((tag, index) => (
+                <Badge key={index} variant="secondary">
+                  {tag}
+                </Badge>
+              ))}
           </div>
           <div>
             <p className="font-bold text-3xl md:text-4xl">{album.album_name}</p>
-            <p className="text-sm md:text-lg">{album.description}</p>
+            <p className="text-sm md:text-lg md:w-[80%]">{album.description}</p>
           </div>
-          <div>
-            {/* add link to user profile */}
-            <p className="font-semibold text-sm mb-2">Created by</p>
-            <div className="flex gap-2 items-center">
-              <Avatar className="w-8 h-8">
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <p>{album.owner.username}</p>
+          <div className="flex items-end justify-between">
+            <div onClick={() => {}}>
+              <p className="font-semibold text-sm mb-2">Created by</p>
+              <div className="flex gap-2 items-center">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                <p>{album.owner.username}</p>
+              </div>
             </div>
+            {album.owner.id === user_id ? (
+              <>
+                {status === "loading" ? (
+                  <Skeleton className="w-24 h-10 rounded-full" />
+                ) : (
+                  <div className="flex gap-2">
+                    <FormEditAlbum data={album} />
+                    <AlertDeleteAlbum
+                      album_id={album.id}
+                      album_name={album.album_name}
+                    />
+                  </div>
+                )}
+              </>
+            ) : null}
           </div>
         </div>
       </div>
