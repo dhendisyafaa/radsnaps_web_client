@@ -7,12 +7,12 @@ const LoadingOval = ({ className }) => {
       <Oval
         height={20}
         width={20}
-        color="#7c3aed"
+        color="#fff"
         wrapperStyle={{}}
         wrapperClass=""
         visible={true}
         ariaLabel="oval-loading"
-        secondaryColor="#7c3aed6e"
+        secondaryColor="#ac8ee0"
         strokeWidth={2}
         strokeWidthSecondary={2}
       />
