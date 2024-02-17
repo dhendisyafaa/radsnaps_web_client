@@ -1,8 +1,10 @@
 import { useImagesByUser } from "@/app/api/resolver/imageResolver";
 import GalleryGridView from "@/components/gallery/GalleryGridView";
+import { useUserData } from "@/hooks/useUserData";
 import React from "react";
 
-export default function PostsByUser({ user_id }) {
+export default function PostsByUser() {
+  const { user_id } = useUserData();
   const {
     data: imagesUser,
     isLoading,
@@ -14,15 +16,15 @@ export default function PostsByUser({ user_id }) {
   if (isLoading) return <p>load...</p>;
   if (isError) return <p>error: {error}</p>;
 
-  const image = imagesUser.data.data;
+  const images = imagesUser.data.data;
   return (
     <div>
-      {image.length != 0 ? (
+      {images.length != 0 ? (
         <GalleryGridView
-          image={image}
+          images={images}
           withLike={false}
           withOverlay={false}
-          className={"columns-2 md:columns-3 gap-3 mt-4"}
+          className={"columns-3 gap-3 space-y-3"}
         />
       ) : (
         "empty state posts"

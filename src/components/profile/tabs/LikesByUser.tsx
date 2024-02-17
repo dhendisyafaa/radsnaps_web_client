@@ -1,7 +1,10 @@
 import { useLikeByUser } from "@/app/api/resolver/likeResolver";
 import GalleryGridView from "@/components/gallery/GalleryGridView";
+import { useUserData } from "@/hooks/useUserData";
 
-export default function LikesByUser({ user_id }) {
+export default function LikesByUser() {
+  const { user_id } = useUserData();
+
   const {
     data: likedImages,
     isLoading,
@@ -18,9 +21,9 @@ export default function LikesByUser({ user_id }) {
     <div>
       {liked.length != 0 ? (
         <GalleryGridView
-          image={liked}
+          images={liked}
           withLike={false}
-          className={"columns-2 md:columns-3 gap-3 mt-4"}
+          className={"columns-3 gap-3 space-y-3"}
         />
       ) : (
         "empty state likes"

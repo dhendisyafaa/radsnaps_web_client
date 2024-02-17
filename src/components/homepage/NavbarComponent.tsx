@@ -9,6 +9,8 @@ import ButtonPostImage from "../button/ButtonPostImage";
 import { Button } from "../ui/button";
 import DropdownProfile from "./DropdownProfile";
 import NavigationButton from "./NavigationButton";
+import { useUserData } from "@/hooks/useUserData";
+import SkeletonButtonCredential from "../common/skeleton/SkeletonButtonCredential";
 
 export default function NavbarComponent({
   bgOnScroll = "backdrop-blur-sm bg-background/80",
@@ -21,9 +23,26 @@ export default function NavbarComponent({
   children,
 }) {
   const scrollPosition = useScrollPosition();
-  const { data: session } = useSession();
+  const { status } = useUserData();
   const { back } = useRouter();
 
+  let buttonCredential;
+  if (status === "loading") {
+    buttonCredential = <SkeletonButtonCredential />;
+  } else if (status === "authenticated") {
+    buttonCredential = (
+      <div className="flex items-center gap-2">
+        <ButtonPostImage />
+        <DropdownProfile />
+      </div>
+    );
+  } else if (status === "unauthenticated") {
+    buttonCredential = (
+      <Button className="font-semibold px-8" onClick={() => signIn()}>
+        Login
+      </Button>
+    );
+  }
   return (
     <>
       <div
@@ -50,16 +69,7 @@ export default function NavbarComponent({
         </div>
         {withMoreDropdown && (
           <div className="flex gap-2 items-center justify-end">
-            {session ? (
-              <div className="flex items-center gap-2">
-                <ButtonPostImage />
-                <DropdownProfile />
-              </div>
-            ) : (
-              <Button className="font-semibold px-8" onClick={() => signIn()}>
-                Login
-              </Button>
-            )}
+            {buttonCredential}
           </div>
         )}
       </div>
