@@ -79,6 +79,9 @@ export function DrawerShareContent({ url }) {
     });
   };
 
+  const titleShareContent =
+    "Radsnaps | Framing the World's Wonders in Every Snap. Radsnaps is a global photo sharing platform that allows users to explore and share the beauty of the world through visual moments.";
+
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -96,28 +99,21 @@ export function DrawerShareContent({ url }) {
           <WhatsappShareButton
             url={url}
             blankTarget={true}
-            title={
-              "next-share is a social share buttons for your next React apps."
-            }
-            separator=":: "
+            title={titleShareContent}
           >
             <WhatsappIcon size={42} round />
           </WhatsappShareButton>
           <TelegramShareButton
             url={url}
             blankTarget={true}
-            title={
-              "next-share is a social share buttons for your next React apps."
-            }
+            title={titleShareContent}
           >
             <TelegramIcon size={42} round />
           </TelegramShareButton>
           <FacebookShareButton
             url={url}
             blankTarget={true}
-            quote={
-              "next-share is a social share buttons for your next React apps."
-            }
+            quote={titleShareContent}
             hashtag={"#nextshare"}
           >
             <FacebookIcon size={42} round />
@@ -128,9 +124,7 @@ export function DrawerShareContent({ url }) {
           <TwitterShareButton
             url={url}
             blankTarget={true}
-            title={
-              "next-share is a social share buttons for your next React apps."
-            }
+            title={titleShareContent}
           >
             <TwitterIcon size={42} round />
           </TwitterShareButton>
@@ -148,9 +142,7 @@ export function DrawerShareContent({ url }) {
           <PinterestShareButton
             url={url}
             blankTarget={true}
-            media={
-              "next-share is a social share buttons for your next React apps."
-            }
+            media={titleShareContent}
           >
             <PinterestIcon size={42} round />
           </PinterestShareButton>
