@@ -1,6 +1,7 @@
 "use client";
 import { useDetailAlbum } from "@/app/api/resolver/albumResolver";
 import ImagesAlbum from "@/components/album/ImagesAlbum";
+import ButtonReportIssue from "@/components/button/ButtonReportIssue";
 import SkeletonDetailAlbum from "@/components/common/skeleton/SkeletonDetailAlbum";
 import AlertDeleteAlbum from "@/components/dialog/AlertDeleteAlbum";
 import FormEditAlbum from "@/components/form/FormEditAlbum";
@@ -89,11 +90,19 @@ export default function DetailAlbumPage({ params }) {
                 {status === "loading" ? (
                   <Skeleton className="w-24 h-10 rounded-full" />
                 ) : (
-                  <div className="flex gap-2">
+                  <div className="flex gap-3">
                     <FormEditAlbum data={album} />
                     <AlertDeleteAlbum
                       album_id={album.id}
                       album_name={album.album_name}
+                    />
+                    <ButtonReportIssue
+                      withTitle={false}
+                      content_type={"album"}
+                      content_id={album.id}
+                      className={
+                        "bg-transparent rounded-full p-1 border border-muted-foreground hover:bg-white/50 w-8 h-8 shadow-sm [&_svg]:h-4 [&_svg]:w-4 grid place-items-center"
+                      }
                     />
                   </div>
                 )}
