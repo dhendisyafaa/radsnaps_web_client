@@ -8,9 +8,8 @@ export function mainMiddleware(req) {
 }
 
 export default withAuth(mainMiddleware, [
+  "/profile/:page*",
   "/dashboard",
   "/settings",
   "/posting",
-  "/profile/*",
-  // "/gallery?filter=trending",t
 ]);
