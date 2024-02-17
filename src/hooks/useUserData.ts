@@ -7,5 +7,6 @@ export const useUserData = () => {
     user_id: session?.user.id,
     username: session?.user.username,
     email: session?.user.email,
+    avatar: session?.user.avatar,
   };
 };
