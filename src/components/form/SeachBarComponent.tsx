@@ -14,7 +14,10 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 
-export default function SeachBarComponent({ className = "max-w-md" }) {
+export default function SeachBarComponent({
+  className = "max-w-md",
+  endpoint,
+}) {
   const { push } = useRouter();
   const params = useSearchParams();
   const q = params.get("q");
@@ -33,7 +36,7 @@ export default function SeachBarComponent({ className = "max-w-md" }) {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const encodedValues = values.search.replace(/\s/g, "-");
-    push(`/gallery/search?q=${encodedValues}`);
+    push(`/search/${endpoint}?q=${encodedValues}`);
   }
 
   return (

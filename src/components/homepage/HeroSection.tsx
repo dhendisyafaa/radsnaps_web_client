@@ -16,7 +16,7 @@ export default function HeroSection() {
         Framing the world&apos;s wonders in{" "}
         <span className="text-primary">every snap</span>
       </p>
-      <SeachBarComponent className="max-w-lg" />
+      <SeachBarComponent className="max-w-lg" endpoint={"image"} />
     </div>
   );
 }
