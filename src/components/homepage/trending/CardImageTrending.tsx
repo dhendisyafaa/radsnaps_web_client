@@ -46,7 +46,7 @@ export default function CardImageTrending() {
                   fill="true"
                   priority
                   quality={25}
-                  onLoadingComplete={() => setImageLoading(false)}
+                  onLoad={() => setImageLoading(false)}
                   className={cn(
                     "object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 group-hover:z-30 duration-200",
                     imageLoading

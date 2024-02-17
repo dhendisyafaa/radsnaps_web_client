@@ -31,7 +31,7 @@ export default function AlbumGridView({
               }
               alt={`cover album id ${album.id}`}
               fill
-              onLoadingComplete={() => setImageLoading(false)}
+              onLoad={() => setImageLoading(false)}
               quality={5}
               className={cn(
                 "object-cover object-center group-hover:scale-105 duration-300",
