@@ -107,58 +107,60 @@ export default function ButtonSaveToAlbum({
             </DialogTitle>
           </DialogHeader>
           <div className="h-full flex flex-col gap-2 max-h-[50vh] overflow-y-auto my-6">
-            {albums.map((album) => {
-              const isSaved = album?.images.some(
-                (image) => image.image_id === image_id
-              );
-              return (
-                <div
-                  key={album.id}
-                  className={cn(
-                    "rounded-lg border bg-card text-card-foreground shadow-sm p-1 flex items-center justify-between cursor-pointer select-none group hover:border-primary duration-300",
-                    isSaved && "border-primary"
-                  )}
-                  onClick={() =>
-                    !isSaved
-                      ? handleAddImageToAlbum(album.id)
-                      : handleDeleteImageInAlbum(album.id)
-                  }
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="relative h-16 w-16 rounded-md overflow-hidden">
-                      <Image
-                        src={
-                          album.album_cover ||
-                          "https://images.unsplash.com/photo-1514539079130-25950c84af65?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        }
-                        alt={`album ${album.id} cover`}
-                        fill
-                        className="object-cover"
-                      />
+            {albums.length !== 0
+              ? albums.map((album) => {
+                  const isSaved = album?.images.some(
+                    (image) => image.image_id === image_id
+                  );
+                  return (
+                    <div
+                      key={album.id}
+                      className={cn(
+                        "rounded-lg border bg-card text-card-foreground shadow-sm p-1 flex items-center justify-between cursor-pointer select-none group hover:border-primary duration-300",
+                        isSaved && "border-primary"
+                      )}
+                      onClick={() =>
+                        !isSaved
+                          ? handleAddImageToAlbum(album.id)
+                          : handleDeleteImageInAlbum(album.id)
+                      }
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="relative h-16 w-16 rounded-md overflow-hidden">
+                          <Image
+                            src={
+                              album.album_cover ||
+                              "https://images.unsplash.com/photo-1514539079130-25950c84af65?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            }
+                            alt={`album ${album.id} cover`}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <p
+                            className={cn(
+                              "text-sm font-semibold leading-none tracking-tight",
+                              isSaved && "text-primary"
+                            )}
+                          >
+                            {album.album_name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">{`${album.images.length} images`}</p>
+                          <p className="text-[11px] text-muted-foreground">
+                            {relativeTimeSuffix(album.updated_at)}
+                          </p>
+                        </div>
+                      </div>
+                      {isSaved ? (
+                        <Button variant={"ghost"} size={"icon"}>
+                          <Check />
+                        </Button>
+                      ) : null}
                     </div>
-                    <div className="space-y-1">
-                      <p
-                        className={cn(
-                          "text-sm font-semibold leading-none tracking-tight",
-                          isSaved && "text-primary"
-                        )}
-                      >
-                        {album.album_name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">{`${album.images.length} images`}</p>
-                      <p className="text-[11px] text-muted-foreground">
-                        {relativeTimeSuffix(album.updated_at)}
-                      </p>
-                    </div>
-                  </div>
-                  {isSaved ? (
-                    <Button variant={"ghost"} size={"icon"}>
-                      <Check />
-                    </Button>
-                  ) : null}
-                </div>
-              );
-            })}
+                  );
+                })
+              : "empty state album user"}
           </div>
           <div className="flex justify-between items-center">
             <FormCreateAlbum />

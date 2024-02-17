@@ -16,7 +16,7 @@ export default function ImagesAlbum({ album_id }) {
     <div className="container">
       {images.length !== 0 ? (
         <GalleryGridView
-          image={images}
+          images={images}
           className={
             "columns-2 gap-3 lg:gap-5 space-y-5 sm:columns-3 lg:columns-4 xl:columns-5"
           }

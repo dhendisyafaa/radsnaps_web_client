@@ -66,7 +66,7 @@ export default function ProfilePage({ params }) {
           Share profile
         </Button>
       </div>
-      <TabsProfile user_id={user.id} />
+      <TabsProfile />
     </div>
   );
 }

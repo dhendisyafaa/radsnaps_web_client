@@ -6,11 +6,6 @@ export const getAllImage = (params) => {
   return axios.get(`/image/${objString}`);
 };
 
-export const getImagesBySearch = (params) => {
-  const objString = convertToURI(params);
-  return axios.get(`/image/search${objString}`);
-};
-
 export const getDetailImage = (id) => {
   return axios.get(`/image/${id}`);
 };

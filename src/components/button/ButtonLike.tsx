@@ -24,6 +24,7 @@ export default function ButtonLike({ likes, image_id, className }) {
   const isUserLikedImage = isUserLiked(user_id);
 
   const handleCreateLike = async () => {
+    // FIX this section, change logic signIn with credential
     if (status === "authenticated") {
       try {
         if (!isUserLikedImage) {

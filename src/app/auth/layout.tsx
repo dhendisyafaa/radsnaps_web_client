@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function LayoutAuth({ children }) {
   return (
-    <div className="h-screen w-full grid md:grid-cols-2 border">
+    <div className="h-screen w-full grid md:grid-cols-2">
       <div className="relative">
         <Image
           src="/assets/image/login-bg.jpg"
@@ -14,7 +14,7 @@ export default function LayoutAuth({ children }) {
         />
       </div>
       <div className="container grid place-items-center overflow-y-auto">
-        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px] py-6">
+        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px] py-12">
           {children}
           <p className="px-8 text-center text-sm text-muted-foreground">
             By clicking continue, you agree to our{" "}

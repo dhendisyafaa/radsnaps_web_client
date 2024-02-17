@@ -10,8 +10,13 @@ export default function AlbumPage() {
     <NavbarComponent>
       <div className="container mt-24 pb-44 flex flex-col gap-8 ">
         <div className="flex justify-between items-center w-full gap-3">
-          <FormCreateAlbum />
-          <SeachBarComponent />
+          <div>
+            <p className="font-semibold text-primary-foreground mb-2">
+              Official albums
+            </p>
+            <FormCreateAlbum />
+          </div>
+          <SeachBarComponent endpoint={"album"} />
         </div>
         <div className="flex flex-col gap-3">
           <OfficialAlbums />

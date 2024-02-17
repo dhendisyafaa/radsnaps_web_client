@@ -20,13 +20,6 @@ const useAllImage = (params) => {
   );
 };
 
-const useImagesBySearch = (params) => {
-  return useQueryNoRefecth(
-    ["images", `search: ${params.q}`],
-    async () => await getImagesBySearch(params)
-  );
-};
-
 const useDetailImage = (id) => {
   return useQueryNoRefecth(["image", id], async () => await getDetailImage(id));
 };
@@ -100,7 +93,6 @@ export {
   useDetailImage,
   useImageByAlbum,
   useImageToAlbum,
-  useImagesBySearch,
   useImagesByUser,
   usePostImage,
   useTrendingImage,

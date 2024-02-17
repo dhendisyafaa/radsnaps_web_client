@@ -9,20 +9,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useUserData } from "@/hooks/useUserData";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Send } from "lucide-react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
-import { ToastAction } from "../ui/toast";
 
-export default function FormCreateComment() {
+export default function FormCreateComment({ image_id }) {
   const { toast } = useToast();
   const pathname = usePathname();
-  const idImage = pathname.split("/");
   const {
     mutateAsync: createCommentByImage,
     variables,
@@ -30,7 +29,7 @@ export default function FormCreateComment() {
     isSuccess,
     isError,
   } = useCreateComment();
-  const { data: session } = useSession();
+  const { user_id, status } = useUserData();
 
   const formSchema = z.object({
     comment_content: z.string().min(2).max(50),
@@ -45,15 +44,11 @@ export default function FormCreateComment() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const data = {
-        comment: {
-          ...values,
-          user_id: session?.user.user_id,
-          image_id: idImage[3],
-        },
-        token: session?.user.accessToken,
-      };
-      await createCommentByImage(data);
+      await createCommentByImage({
+        ...values,
+        user_id,
+        image_id,
+      });
       form.reset();
     } catch (error) {
       console.log("error", error);
@@ -62,7 +57,7 @@ export default function FormCreateComment() {
 
   return (
     <div className="w-full">
-      {!session ? (
+      {status === "unauthenticated" ? (
         <Button
           className="w-full text-primary-foreground"
           onClick={() => signIn()}

@@ -4,10 +4,8 @@ import React from "react";
 export default function FooterComponent() {
   const date = new Date();
   return (
-    <div className="hidden w-full container py-10 md:flex items-center justify-between bg-background text-primary-foreground">
-      <p className="text-2xl text-foreground font-medium font-source-serif">
-        RadSnaps
-      </p>
+    <div className="hidden w-full container py-10 md:flex items-center justify-between bg-background">
+      <p className="text-2xl font-medium font-source-serif">RadSnaps</p>
       <div className="hidden md:flex gap-2 text-sm">
         <p>© {date.getFullYear()} Dribbble</p> |{" "}
         <p>
