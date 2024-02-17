@@ -23,7 +23,7 @@ export default function TrendingImage() {
             of the world through visual moments.
           </p>
         </div>
-        <Link href={"/gallery?filter=trending"}>
+        <Link href={"/gallery"}>
           <p
             className="bg-primary text-primary-foreground
            font-semibold rounded-full py-2 px-8 md:block hidden"

@@ -25,8 +25,10 @@ export default function UserRegisterForm() {
   const [loadingButton, setloadingButton] = React.useState<boolean>(false);
   const { mutateAsync: registerUser } = useRegisterUser();
   const { push } = useRouter();
-  const searchParams = useSearchParams();
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const params = searchParams.get("callbackUrl");
+  const callbackUrl = params || "/gallery";
 
   const formSchema = z.object({
     fullname: z.string().min(2, {
@@ -71,7 +73,7 @@ export default function UserRegisterForm() {
         });
         setloadingButton(false);
         form.reset();
-        push("/gallery?filter=trending");
+        push(callbackUrl);
       } else {
         setloadingButton(false);
         toast({

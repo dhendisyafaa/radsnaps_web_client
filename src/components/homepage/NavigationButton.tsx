@@ -37,13 +37,13 @@ export default function NavigationButton() {
           <div className="hidden md:block">HOME</div>
         </div>
       </Link>
-      <Link href="/gallery?filter=trending">
+      <Link href="/gallery">
         <div
           className={cn(
             "px-6 py-2 text-xs font-bold rounded-full",
             currUrl === "/gallery?filter=trending" ||
               currUrl === "/gallery?filter=newest" ||
-              currUrl === "/gallery?filter=oldest"
+              currUrl === "/gallery"
               ? "bg-primary text-white"
               : "bg-background text-foreground"
           )}
