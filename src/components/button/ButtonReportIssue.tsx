@@ -8,18 +8,21 @@ export default function ButtonReportIssue({
   content_type,
   content_id,
   withTitle = true,
+  withIcon = true,
+  flexColLayout = true,
 }) {
   const { push } = useRouter();
   return (
     <div
       onClick={() => push(`/report/report-issue/${content_type}/${content_id}`)}
       className={cn(
-        `flex flex-col gap-1 items-center text-[8px] cursor-pointer`,
+        `flex gap-1 items-center text-[8px] cursor-pointer`,
+        flexColLayout && "flex-col",
         className
       )}
     >
-      <Flag />
-      {withTitle && <p className="text-primary-foreground">Report</p>}
+      {withIcon && <Flag />}
+      {withTitle && <p className="text-foreground">Report</p>}
     </div>
   );
 }

@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useUserData } from "@/hooks/useUserData";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
+import { Plus, Replace } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -116,14 +116,21 @@ export default function FormCreateAlbum() {
                         name="data_image"
                         render={({ field: { onChange, value, ...rest } }) => (
                           <FormItem>
+                            <FormLabel className="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-full text-xs [&_svg]:h-5 [&_svg]:w-5 font-medium text-center py-2 px-3 cursor-pointer flex items-center gap-2">
+                              <Replace />
+                              Change image
+                            </FormLabel>
                             <FormControl>
                               <Input
-                                {...rest}
+                                className="hidden"
                                 accept="image/*"
                                 name="data_image"
                                 type="file"
-                                disabled={isSubmitting || isPending}
+                                disabled={
+                                  form.formState.isSubmitting || isPending
+                                }
                                 onChange={onSelectFile}
+                                {...rest}
                               />
                             </FormControl>
                             <FormMessage />

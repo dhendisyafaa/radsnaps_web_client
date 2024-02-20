@@ -85,29 +85,31 @@ export default function DetailAlbumPage({ params }) {
                 <p>{album.owner.username}</p>
               </div>
             </div>
-            {album.owner.id === user_id ? (
-              <>
-                {status === "loading" ? (
-                  <Skeleton className="w-24 h-10 rounded-full" />
-                ) : (
-                  <div className="flex gap-3">
-                    <FormEditAlbum data={album} />
-                    <AlertDeleteAlbum
-                      album_id={album.id}
-                      album_name={album.album_name}
-                    />
-                    <ButtonReportIssue
-                      withTitle={false}
-                      content_type={"album"}
-                      content_id={album.id}
-                      className={
-                        "bg-transparent rounded-full p-1 border border-muted-foreground hover:bg-white/50 w-8 h-8 shadow-sm [&_svg]:h-4 [&_svg]:w-4 grid place-items-center"
-                      }
-                    />
-                  </div>
-                )}
-              </>
-            ) : null}
+            <div className="flex gap-3">
+              {album.owner.id === user_id ? (
+                <>
+                  {status === "loading" ? (
+                    <Skeleton className="w-24 h-10 rounded-full" />
+                  ) : (
+                    <>
+                      <FormEditAlbum data={album} />
+                      <AlertDeleteAlbum
+                        album_id={album.id}
+                        album_name={album.album_name}
+                      />
+                    </>
+                  )}
+                </>
+              ) : null}
+              <ButtonReportIssue
+                withTitle={false}
+                content_type={"album"}
+                content_id={album.id}
+                className={
+                  "bg-transparent rounded-full p-1 border border-muted-foreground hover:bg-white/50 w-8 h-8 shadow-sm [&_svg]:h-4 [&_svg]:w-4 grid place-items-center"
+                }
+              />
+            </div>
           </div>
         </div>
       </div>
