@@ -20,6 +20,7 @@ export default function NavbarComponent({
   withMoreDropdown = true,
   withBottomNavbar = true,
   backHeaderTitle = "Title Header",
+  heightScroll = 0,
   children,
 }) {
   const scrollPosition = useScrollPosition();
@@ -48,7 +49,7 @@ export default function NavbarComponent({
       <div
         className={cn(
           `container w-full grid grid-cols-2 justify-between items-center py-5 z-50 fixed top-0`,
-          scrollPosition > 0 ? bgOnScroll : customBackground,
+          scrollPosition > heightScroll ? bgOnScroll : customBackground,
           withNavButton ? "md:grid-cols-3" : "md:grid-cols-2"
         )}
       >

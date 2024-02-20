@@ -11,7 +11,7 @@ export default function TrendingImage() {
   const { push } = useRouter();
 
   return (
-    <div className="mb-44">
+    <div className="mb-24">
       <div className="container flex items-center justify-between">
         <div className="text-center md:text-start">
           <p className="font-semibold font-source-serif mb-3 text-2xl">
