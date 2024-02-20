@@ -1,6 +1,11 @@
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import useQueryNoRefecth from "../hooks/useQueryNoRefetch";
-import { getContentBySearch, getContentReported } from "../services/contentApi";
+import {
+  deleteContentReported,
+  getContentBySearch,
+  getContentReported,
+} from "../services/contentApi";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useContentBySearch = (data) => {
   return useQueryNoRefecth(
@@ -15,4 +20,13 @@ export const useContentReported = (data) => {
     [`report ${data.endpoint}`, data.id],
     async () => await getContentReported(axiosAuth, data.endpoint, data.id)
   );
+};
+
+export const useDeleteContentReported = () => {
+  const axiosAuth = useAxiosAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) =>
+      deleteContentReported(axiosAuth, data.endpoint, data.id),
+  });
 };

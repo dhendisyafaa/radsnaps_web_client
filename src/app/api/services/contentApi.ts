@@ -9,3 +9,7 @@ export const getContentBySearch = (endpoint, params) => {
 export const getContentReported = (auth, endpoint, id) => {
   return auth.get(`/${endpoint}/${id}`);
 };
+
+export const deleteContentReported = (auth, endpoint, id) => {
+  return auth.delete(`/${endpoint}/${id}`);
+};

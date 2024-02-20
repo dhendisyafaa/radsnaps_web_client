@@ -4,6 +4,7 @@ import { useContentReported } from "@/app/api/resolver/contentResolver";
 import { useCreateReportIssue } from "@/app/api/resolver/reportIssueResolver";
 import LoadingOval from "@/components/common/loader/LoadingOval";
 import NavbarComponent from "@/components/homepage/NavbarComponent";
+import ContentReportIssue from "@/components/report/ContentReportIssue";
 import MultipleSelector from "@/components/ui/MultipleSelector";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -25,10 +26,7 @@ export default function ReportIssue({ params }) {
   const { push } = useRouter();
   const content_type = params.content[0];
   const content_id = params.content[1];
-  const { data: contentReported, isLoading } = useContentReported({
-    endpoint: content_type,
-    id: content_id,
-  });
+
   const { mutateAsync: generateReportIssue, isPending } =
     useCreateReportIssue();
 
@@ -64,100 +62,15 @@ export default function ReportIssue({ params }) {
     }
   };
 
-  if (isLoading) return <p>load...</p>;
-
-  const content = contentReported.data.data;
-  let contentComponent;
-
-  if (content_type === "image") {
-    contentComponent = (
-      <div
-        className="flex gap-3 w-full items-center h-44 cursor-pointer"
-        onClick={() => push(`/gallery/detail/${content.id}`)}
-      >
-        <div className="relative border rounded-md w-[70%] lg:w-[40%] h-full">
-          <Image
-            src={content.image_url}
-            alt={`image ${content.image_name} from owner ${content.owner.username}`}
-            loading="lazy"
-            fill
-            quality={30}
-            className={cn(
-              "w-full object-cover lg:object-contain object-center cursor-pointer transition-all ease-in-out group-hover:scale-105 overflow-hidden"
-            )}
-          />
-        </div>
-        <div className="w-full">
-          <p className="text-sm md:text-lg font-semibold">
-            {content.image_title}
-          </p>
-          <p className="text-xs md:text-sm">{content.image_description}</p>
-          <div className="flex gap-2 items-center text-xs md:text-sm mt-3">
-            <Avatar className="w-6 h-6">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <p>{content.owner.username}</p>
-          </div>
-        </div>
-      </div>
-    );
-  } else if (content_type === "user") {
-    contentComponent = (
-      <div
-        className="flex gap-2 items-center p-5 cursor-pointer"
-        onClick={() => push(`/profile/${content.username}`)}
-      >
-        <Avatar className="w-12 h-12">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-        <div>
-          <p className="font-semibold text-lg">{content.username}</p>
-          <p className="text-sm">{content.fullname}</p>
-        </div>
-      </div>
-    );
-  } else if (content_type === "album") {
-    contentComponent = (
-      <div
-        className="flex gap-3 w-full items-center h-44 cursor-pointer"
-        onClick={() => push(`/album/${content.id}`)}
-      >
-        <div className="relative border rounded-md w-[70%] lg:w-[40%] h-full">
-          <Image
-            src={content.album_cover}
-            alt={`image ${content.album_name} from owner ${content.owner.username}`}
-            loading="lazy"
-            fill
-            quality={30}
-            className={cn(
-              "w-full object-cover lg:object-contain object-center cursor-pointer transition-all ease-in-out group-hover:scale-105 overflow-hidden"
-            )}
-          />
-        </div>
-        <div className="w-full">
-          <p className="text-sm md:text-lg font-semibold">
-            {content.album_name}
-          </p>
-          <p className="text-xs md:text-sm truncate">{content.description}</p>
-          <div className="flex gap-2 items-center text-xs md:text-sm mt-3">
-            <Avatar className="w-6 h-6">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <p>{content.owner.username}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="md:container grid gap-6">
       <div className="border border-border rounded-lg w-full h-fit p-1">
-        {contentComponent}
+        <ContentReportIssue
+          content_type={content_type}
+          content_id={content_id}
+        />
       </div>
+      <p className="font-semibold text-sm">Content type: {content_type}</p>
       <div className="flex flex-col justify-between min-h-[70vh] w-full">
         <div className="space-y-3">
           <div className="flex w-full flex-col">

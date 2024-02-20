@@ -5,6 +5,17 @@ import { relativeTimeWithoutSuffix } from "@/utils/relativeTime";
 import { useMutationState } from "@tanstack/react-query";
 import FormCreateComment from "../form/FormCreateComment";
 import { ScrollArea } from "../ui/scroll-area";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import ButtonReportIssue from "../button/ButtonReportIssue";
+import { MoreVertical } from "lucide-react";
 
 export default function CommentSection({ imageId }) {
   const { data: comments, isLoading } = useCommentByImage(imageId);
@@ -49,18 +60,33 @@ export default function CommentSection({ imageId }) {
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <div>
-                <div className="flex gap-2 items-center">
-                  <p className="text-lg font-semibold leading-none tracking-tight">
-                    {item.user.username}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {relativeTimeWithoutSuffix(item.created_at)}
+              <div className="flex justify-between items-start w-full">
+                <div>
+                  <div className="flex gap-2 items-center">
+                    <p className="text-lg font-semibold leading-none tracking-tight">
+                      {item.user.username}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {relativeTimeWithoutSuffix(item.created_at)}
+                    </p>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {item.comment_content}
                   </p>
                 </div>
-                <p className="text-sm text-muted-foreground mt-2">
-                  {item.comment_content}
-                </p>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="[&_svg]:w-4 [&_svg]:h-4">
+                    <MoreVertical />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="p-3">
+                    <ButtonReportIssue
+                      content_id={item.id}
+                      content_type={"comment"}
+                      flexColLayout={false}
+                      className={"[&_svg]:w-6 [&_svg]:h-6 text-sm"}
+                    />
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           ))
