@@ -17,10 +17,14 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, MessageCircleOff, TimerReset } from "lucide-react";
+import {
+  ArrowUpDown,
+  MessageCircleOff,
+  TimerReset,
+  TrashIcon,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { RotatingSquare } from "react-loader-spinner";
 
 export default function ReportContentPage() {
   const [sorting, setSorting] = useState([]);
@@ -29,10 +33,6 @@ export default function ReportContentPage() {
   const reports = reportIssues?.data?.data;
 
   const columns = [
-    {
-      header: "No",
-      accessorKey: "id",
-    },
     {
       header: ({ column }) => {
         return (
@@ -62,26 +62,43 @@ export default function ReportContentPage() {
       header: "Issues",
       accessorKey: "issue",
       cell: ({ row }) => {
-        const sliceIssues = row?.original.issue.slice(0, 2);
+        const issues = row?.original.issue;
+        const sliceIssues = issues.slice(0, 2);
+        const moreIssues = issues.length - sliceIssues.length;
         return (
           <div className="space-x-1 space-y-1 w-64 overflow-x-auto">
             {sliceIssues.map((issue, index) => (
               <Badge key={index}>{issue}</Badge>
             ))}
+            {moreIssues > 2 && (
+              <p className="text-xs inline-flex bg-secondary text-secondary-foreground p-1 rounded-full">
+                +{moreIssues}
+              </p>
+            )}
           </div>
         );
       },
     },
     {
-      header: "Status",
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center gap-1 cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Status
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </div>
+        );
+      },
       accessorKey: "status_report",
       cell: ({ row }) => {
         const status = row.original.status_report;
-        if (status === "processing") {
+        if (status === "pending") {
           return (
             <div className="flex items-center gap-1 text-green-500">
               <TimerReset className="w-4 h-4" />
-              <p>processing...</p>
+              <p>pending</p>
             </div>
           );
         } else if (status === "closed") {
@@ -89,6 +106,13 @@ export default function ReportContentPage() {
             <div className="flex items-center gap-1 text-gray-400">
               <MessageCircleOff className="w-4 h-4" />
               <p>closed</p>
+            </div>
+          );
+        } else if (status === "deleted") {
+          return (
+            <div className="flex items-center gap-1 text-destructive">
+              <TrashIcon className="w-4 h-4" />
+              <p>deleted</p>
             </div>
           );
         }
@@ -101,20 +125,20 @@ export default function ReportContentPage() {
         const contentType = row.original.content_type;
         const contentId = row.original.content_id;
         const idReport = row.original.id;
-        if (status === "processing") {
+        if (status === "pending") {
           return (
             <Button
               size={"default"}
               onClick={() =>
                 push(
-                  `/dashboard/report-content/response/${contentType}/${contentId}`
+                  `/dashboard/report-content/response/${idReport}/${contentType}/${contentId}`
                 )
               }
             >
               Response
             </Button>
           );
-        } else if (status === "closed") {
+        } else if (status === "closed" || status === "deleted") {
           return (
             <Button
               size={"default"}
@@ -159,20 +183,26 @@ export default function ReportContentPage() {
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="font-medium">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
+          {reports.length !== 0 ? (
+            <TableBody>
+              {table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="font-medium">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          ) : (
+            "empty state reports"
+          )}
         </Table>
       ) : (
-        // <p>data..</p>
         <p>load..</p>
       )}
     </div>
