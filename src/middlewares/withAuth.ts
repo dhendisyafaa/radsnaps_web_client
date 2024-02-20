@@ -1,7 +1,6 @@
 import { nextAuthSecret } from "@/configs/config";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
-
 const onlyAdminUrl = ["/dashboard/:path*"];
 
 export default function withAuth(middleware, requireAuth) {
@@ -18,7 +17,7 @@ export default function withAuth(middleware, requireAuth) {
         return NextResponse.redirect(url);
       }
 
-      if (token.role !== "ADMIN" && onlyAdminUrl.includes(pathname)) {
+      if (token.role != "ADMIN" && onlyAdminUrl.includes(pathname)) {
         return NextResponse.redirect(new URL("/", req.url));
       }
     }
