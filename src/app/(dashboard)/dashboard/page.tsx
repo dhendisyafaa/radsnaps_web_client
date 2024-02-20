@@ -1,15 +1,10 @@
-import CardContentDashboard from "@/components/dashboard/CardContentDashboard";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import CardContentDashboard from "@/components/dashboard/content/CardContentDashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  GalleryHorizontal,
+  GalleryHorizontalEnd,
+  UsersRound,
+} from "lucide-react";
 
 export default function page() {
   return (
@@ -20,8 +15,21 @@ export default function page() {
       </TabsList>
       <TabsContent value="overview" className="space-y-4">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <CardContentDashboard />
-          <CardContentDashboard />
+          <CardContentDashboard
+            titleCard={"Total Users"}
+            icon={<UsersRound />}
+            content={"sdsd"}
+          />
+          <CardContentDashboard
+            titleCard={"All Images"}
+            icon={<GalleryHorizontal />}
+            content={"sdsd"}
+          />
+          <CardContentDashboard
+            titleCard={"All Albums"}
+            icon={<GalleryHorizontalEnd />}
+            content={"sdsd"}
+          />
         </div>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
           <CardContentDashboard className="col-span-4" />
