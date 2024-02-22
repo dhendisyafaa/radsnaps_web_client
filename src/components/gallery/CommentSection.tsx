@@ -1,21 +1,18 @@
 "use client";
 import { useCommentByImage } from "@/app/api/resolver/commentResolver";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { relativeTimeWithoutSuffix } from "@/utils/relativeTime";
 import { useMutationState } from "@tanstack/react-query";
 import FormCreateComment from "../form/FormCreateComment";
 import { ScrollArea } from "../ui/scroll-area";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
-import ButtonReportIssue from "../button/ButtonReportIssue";
 import { MoreVertical } from "lucide-react";
+import ButtonReportIssue from "../button/ButtonReportIssue";
 
 export default function CommentSection({ imageId }) {
   const { data: comments, isLoading } = useCommentByImage(imageId);

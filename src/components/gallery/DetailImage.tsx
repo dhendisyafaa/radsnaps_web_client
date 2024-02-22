@@ -1,23 +1,14 @@
 import { useDetailImage } from "@/app/api/resolver/imageResolver";
-import React from "react";
-import {
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from "../ui/drawer";
 import Image from "next/image";
-import { ScrollArea } from "../ui/scroll-area";
-import CommentSection from "./CommentSection";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
 import ButtonLike from "../button/ButtonLike";
+import ButtonReportIssue from "../button/ButtonReportIssue";
 import ButtonSaveToAlbum from "../button/ButtonSaveToAlbum";
 import ButtonShare from "../button/ButtonShare";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
-import { cn } from "@/lib/utils";
-import { Flag } from "lucide-react";
-import ButtonReportIssue from "../button/ButtonReportIssue";
+import { Button } from "../ui/button";
+import { DrawerContent } from "../ui/drawer";
+import CommentSection from "./CommentSection";
 
 export default function DetailImage({ imageId }) {
   const { data: image, isLoading } = useDetailImage(imageId);
