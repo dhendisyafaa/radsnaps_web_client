@@ -1,11 +1,15 @@
 "use client";
+import { useRegisterUser } from "@/app/api/resolver/authResolver";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import LoadingThreeDoots from "../common/loader/LoadingThreeDoots";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -16,15 +20,15 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { signIn } from "next-auth/react";
-import { useRegisterUser } from "@/app/api/resolver/authResolver";
 
 export default function UserRegisterForm() {
   const [loadingButton, setloadingButton] = React.useState<boolean>(false);
   const { mutateAsync: registerUser } = useRegisterUser();
   const { push } = useRouter();
-  const searchParams = useSearchParams();
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const params = searchParams.get("callbackUrl");
+  const callbackUrl = params || "/gallery";
 
   const formSchema = z.object({
     fullname: z.string().min(2, {
@@ -64,17 +68,18 @@ export default function UserRegisterForm() {
       });
       if (!signInData?.error) {
         toast({
-          title: "Yeay, berhasil membuat akun!",
-          description: "Anda akan langsung diarahkan ke halaman gallery",
+          title: "Account created successfully!",
+          description: "You will be directed to the gallery page",
         });
         setloadingButton(false);
-        push("/gallery?filter=trending");
+        form.reset();
+        push(callbackUrl);
       } else {
         setloadingButton(false);
         toast({
           variant: "destructive",
-          title: "Gagal untuk login!",
-          description: "Email tidak ditemukan",
+          title: "Failed to login!",
+          description: "Email not found",
         });
       }
     } catch (error) {
@@ -83,7 +88,7 @@ export default function UserRegisterForm() {
         toast({
           variant: "destructive",
           title: `${
-            error.response?.data?.message || "Email atau kata sandi salah"
+            error.response?.data?.message || "Failed to create account"
           }`,
         });
       }
@@ -92,6 +97,15 @@ export default function UserRegisterForm() {
 
   return (
     <div className={cn("grid gap-6")}>
+      <div className="text-sm flex items-center justify-center gap-1">
+        <p>Already have an account?</p>
+        <Link
+          href={"/auth/login"}
+          className="font-bold text-primary no-underline hover:underline"
+        >
+          Log in
+        </Link>
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <FormField
@@ -145,7 +159,7 @@ export default function UserRegisterForm() {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Masukkan Kata Sandi"
+                    placeholder="Enter your password"
                     type="password"
                     {...field}
                   />
@@ -155,31 +169,14 @@ export default function UserRegisterForm() {
             )}
           />
           <Button disabled={loadingButton} className="w-full">
-            {/* {loadingButton && <LoadingOval />} */}
-            Create an account
+            {loadingButton ? (
+              <LoadingThreeDoots color="#fff" />
+            ) : (
+              "Create an account"
+            )}
           </Button>
         </form>
       </Form>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or sign up with
-          </span>
-        </div>
-      </div>
-      <Button variant="outline" type="button" disabled={loadingButton}>
-        {
-          loadingButton
-            ? "load"
-            : // <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-              "github"
-          // <Icons.gitHub className="mr-2 h-4 w-4" />
-        }{" "}
-        GitHub
-      </Button>
     </div>
   );
 }

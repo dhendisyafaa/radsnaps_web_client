@@ -1,8 +1,10 @@
 "use client";
+
 import {
   useCreateLikeByImage,
   useDislikeImage,
 } from "@/app/api/resolver/likeResolver";
+import { useUserData } from "@/hooks/useUserData";
 import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
@@ -11,36 +13,31 @@ export default function ButtonLike({ likes, image_id, className }) {
   const { mutateAsync: createLike, isPending: loadCreateLike } =
     useCreateLikeByImage();
   const { mutateAsync: dislike, isPending: loadDislike } = useDislikeImage();
-  const { data: session } = useSession();
+  const { user_id, status } = useUserData();
 
-  function isUserLiked(id) {
-    return likes.some((like) => like.user_id === id);
-  }
+  const isUserLiked = (user_id) => {
+    return likes.some(
+      (like) => like.user_id === user_id || like?.user?.id === user_id
+    );
+  };
 
-  const isUserLikedImage = isUserLiked(session?.user.user_id);
+  const isUserLikedImage = isUserLiked(user_id);
 
   const handleCreateLike = async () => {
-    if (session) {
+    // FIX this section, change logic signIn with credential
+    if (status === "authenticated") {
       try {
         if (!isUserLikedImage) {
-          const dataLike = {
-            like: {
-              image_id,
-              user_id: session?.user.user_id,
-            },
-            token: session?.user.accessToken,
-          };
-          await createLike(dataLike);
+          await createLike({
+            image_id,
+            user_id: user_id,
+          });
         } else {
           const likeToDelete = likes.find(
-            (like) => like.user_id === session?.user.user_id
+            (like) => like.user_id === user_id || like?.user?.id === user_id
           );
           if (likeToDelete) {
-            const dataDislike = {
-              id: likeToDelete.id,
-              token: session?.user.accessToken,
-            };
-            await dislike(dataDislike);
+            await dislike(likeToDelete.id);
           }
         }
       } catch (error) {
@@ -64,7 +61,7 @@ export default function ButtonLike({ likes, image_id, className }) {
   return (
     <div
       className={cn(
-        `flex flex-col gap-1 text-center text-[8px] [&_svg]:h-5 [&_svg]:w-5 cursor-pointer`,
+        `flex flex-col gap-1 text-center text-xs [&_svg]:h-5 [&_svg]:w-5 lg:[&_svg]:h-6 lg:[&_svg]:w-6 cursor-pointer`,
         className
       )}
       onClick={() => handleCreateLike()}
@@ -74,7 +71,7 @@ export default function ButtonLike({ likes, image_id, className }) {
       ) : (
         <Heart className="text-white hover:fill-primary hover:text-primary duration-100 transition-all ease-in-out" />
       )}
-      <p className="text-primary-foreground">{lengthLikes}</p>
+      <p className="text-primary-foreground hidden sm:block">{lengthLikes}</p>
     </div>
   );
 }

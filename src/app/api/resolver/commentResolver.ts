@@ -17,10 +17,10 @@ export const useCreateComment = () => {
   const axiosAuth = useAxiosAuth();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data) => createCommentByImage(axiosAuth, data.comment),
+    mutationFn: (data) => createCommentByImage(axiosAuth, data),
     onSettled: (data, variables, context) => {
       queryClient.invalidateQueries({
-        queryKey: ["comment", context.comment.image_id],
+        queryKey: ["comment", context.image_id],
       });
     },
     mutationKey: ["addComment"],

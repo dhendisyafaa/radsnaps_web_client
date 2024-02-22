@@ -8,13 +8,8 @@ export default function DetailImagePage({ params }) {
   const [open, setOpen] = useState(true);
   const { back } = useRouter();
 
-  const handleDrawerClose = () => {
-    back();
-    setOpen(false);
-  };
-
   return (
-    <Drawer open={open} onClose={() => handleDrawerClose()}>
+    <Drawer open={open} onClose={() => back()}>
       <DetailImage imageId={params.id} />
     </Drawer>
   );

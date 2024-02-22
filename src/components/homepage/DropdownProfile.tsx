@@ -1,9 +1,9 @@
 "use client";
 
-import { useDecodedToken } from "@/utils/useDecodedToken";
-import { Menu } from "lucide-react";
+import { useUserData } from "@/hooks/useUserData";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "../button/ModeToggle";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -16,14 +16,21 @@ import {
 } from "../ui/dropdown-menu";
 
 export default function DropdownProfile() {
-  const { username, email } = useDecodedToken();
+  const { username, email, avatar, status } = useUserData();
   const { push } = useRouter();
+
+  const firstLetterUsername = username?.split("", 1);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size={"icon"} className="rounded-full">
-          <Menu />
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={avatar ?? ""} alt={`avatar user ${username}`} />
+            <AvatarFallback className="uppercase">
+              {firstLetterUsername}
+            </AvatarFallback>
+          </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>

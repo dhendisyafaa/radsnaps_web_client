@@ -1,14 +1,14 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PostsByUser from "./tabs/PostsByUser";
 import AlbumsByUser from "./tabs/AlbumsByUser";
 import LikesByUser from "./tabs/LikesByUser";
+import PostsByUser from "./tabs/PostsByUser";
 
-export default function TabsProfile({ user }) {
+export default function TabsProfile() {
   const TAB_LIST = [
     {
       title: "Posts",
       value: "post",
-      content: <PostsByUser user_id={user.id} />,
+      content: <PostsByUser />,
     },
     {
       title: "Your Album",
@@ -18,7 +18,7 @@ export default function TabsProfile({ user }) {
     {
       title: "Likes",
       value: "likes",
-      content: <LikesByUser user_id={user.id} />,
+      content: <LikesByUser />,
     },
   ];
   return (

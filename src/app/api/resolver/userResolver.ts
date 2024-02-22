@@ -1,6 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useQueryNoRefecth from "../hooks/useQueryNoRefetch";
-import { getUserById, getUserByUsername } from "../services/userApi";
+import {
+  getUserById,
+  getUserByUsername,
+  updateProfileUser,
+} from "../services/userApi";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 
 export const useUserById = (id) => {
@@ -17,4 +21,18 @@ export const useUserByUsername = (username) => {
     ["user", username],
     async () => await getUserByUsername(axiosAuth, username)
   );
+};
+
+export const useUpdateProfile = () => {
+  const axiosAuth = useAxiosAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => updateProfileUser(axiosAuth, data.id, data.data),
+    // onSettled: (data, variables, context) => {
+    //   queryClient.invalidateQueries({
+    //     queryKey: ["comment", context.comment.image_id],
+    //   });
+    // },
+    // mutationKey: ["addComment"],
+  });
 };

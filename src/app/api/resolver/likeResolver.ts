@@ -27,9 +27,12 @@ export const useCreateLikeByImage = () => {
   const axiosAuth = useAxiosAuth();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data) => createLikeImage(axiosAuth, data.like),
-    onSettled: async () => {
-      return await queryClient.invalidateQueries({ queryKey: ["images"] });
+    mutationFn: (data) => createLikeImage(axiosAuth, data),
+    onSettled: async (data, variables, context) => {
+      await queryClient.invalidateQueries({ queryKey: ["images"] }),
+        await queryClient.invalidateQueries({
+          queryKey: ["image", context?.like.image_id],
+        });
     },
   });
 };
@@ -38,9 +41,12 @@ export const useDislikeImage = () => {
   const axiosAuth = useAxiosAuth();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data) => dislikeImage(axiosAuth, data.id),
-    onSettled: async () => {
-      return await queryClient.invalidateQueries({ queryKey: ["images"] });
+    mutationFn: (id) => dislikeImage(axiosAuth, id),
+    onSettled: async (data, variables, context) => {
+      await queryClient.invalidateQueries({ queryKey: ["images"] }),
+        await queryClient.invalidateQueries({
+          queryKey: ["image", context?.like.image_id],
+        });
     },
   });
 };
