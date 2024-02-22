@@ -15,13 +15,13 @@ export default function AlbumPage() {
         </div>
         <div className="flex flex-col gap-3 space-y-3">
           <div className="space-y-3">
-            <p className="font-semibold text-primary-foreground border-l-4 border-l-primary pl-2">
+            <p className="font-semibold text-foreground border-l-4 border-l-primary pl-2">
               Official albums
             </p>
             <OfficialAlbums />
           </div>
           <div className="space-y-3">
-            <p className="font-semibold text-primary-foreground border-l-4 border-l-primary pl-2">
+            <p className="font-semibold text-foreground border-l-4 border-l-primary pl-2">
               All albums
             </p>
             <UserAlbums />
