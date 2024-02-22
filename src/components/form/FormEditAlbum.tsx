@@ -79,7 +79,7 @@ export default function FormEditAlbum({ data }) {
       </Button>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit album</DialogTitle>k
+          <DialogTitle>Edit album</DialogTitle>
           <DialogDescription>
             You can only change the album name, description, and tags.
           </DialogDescription>
