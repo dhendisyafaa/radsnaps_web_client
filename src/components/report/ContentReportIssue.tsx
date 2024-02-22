@@ -13,14 +13,14 @@ export default function ContentReportIssue({ content_type, content_id }) {
     id: content_id,
   });
 
+  if (isLoading) return <p>load...</p>;
+
   if (contentReported === undefined)
     return (
       <div className="grid place-items-center h-24 w-full bg-secondary text-secondary-foreground rounded-md border">
-        empty state reported content
+        Content has been deleted
       </div>
     );
-
-  if (isLoading) return <p>load...</p>;
 
   const content = contentReported.data.data;
 
