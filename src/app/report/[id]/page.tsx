@@ -53,7 +53,7 @@ export default function DetailReportIssue({ params }) {
         {report.response !== null ? (
           <>
             <p>
-              Response message{" | "}
+              Response message{" • "}
               <span className="text-xs text-secondary-foreground">
                 {relativeTimeSuffix(report.response.created_at)}
               </span>
