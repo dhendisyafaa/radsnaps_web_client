@@ -2,9 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import axios from "axios";
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
-import NextNProgress from "nextjs-progressbar";
-import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
+import "./globals.css";
 
 import Providers from "./providers";
 

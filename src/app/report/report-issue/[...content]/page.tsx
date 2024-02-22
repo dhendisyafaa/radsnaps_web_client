@@ -1,20 +1,15 @@
 "use client";
 
-import { useContentReported } from "@/app/api/resolver/contentResolver";
 import { useCreateReportIssue } from "@/app/api/resolver/reportIssueResolver";
 import LoadingOval from "@/components/common/loader/LoadingOval";
-import NavbarComponent from "@/components/homepage/NavbarComponent";
 import ContentReportIssue from "@/components/report/ContentReportIssue";
 import MultipleSelector from "@/components/ui/MultipleSelector";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { REPORTISSUES } from "@/constants/data";
 import { useUserData } from "@/hooks/useUserData";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 

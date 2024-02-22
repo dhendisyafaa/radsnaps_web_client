@@ -44,6 +44,10 @@ export default function CreateResponseReport({ params }) {
   const [responseMessage, setResponseMessage] = useState("");
   const { user_id } = useUserData();
 
+  if (isLoading) return <p>load...</p>;
+
+  const report = reportData?.data?.data;
+
   const handleCloseReport = async () => {
     try {
       const data = {
@@ -78,7 +82,7 @@ export default function CreateResponseReport({ params }) {
       await generateResponseReport(data);
       await deleteContentReported({
         endpoint: content_type,
-        id: content_id,
+        id: content_type === "user" ? report.user_id : content_id,
       });
       toast({
         title: "Report was closed successfully!",
@@ -97,10 +101,6 @@ export default function CreateResponseReport({ params }) {
       }
     }
   };
-
-  if (isLoading) return <p>load...</p>;
-
-  const report = reportData?.data?.data;
 
   return (
     <>
