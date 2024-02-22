@@ -35,7 +35,13 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 
-export default function DrawerDialogShare({ open, onOpenChange, url }) {
+export default function DrawerDialogShare({
+  open,
+  onOpenChange,
+  url,
+  title = "Share this image",
+  description = "Share this image to people who want to see it",
+}) {
   const isDesktop = useMediaQuery("(min-width: 640px)");
 
   if (isDesktop) {
@@ -43,10 +49,8 @@ export default function DrawerDialogShare({ open, onOpenChange, url }) {
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Share this image</DialogTitle>
-            <DialogDescription>
-              Share this photo to people who want to see it
-            </DialogDescription>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
           <DrawerShareContent url={url} />
         </DialogContent>
