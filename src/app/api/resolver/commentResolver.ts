@@ -4,7 +4,7 @@ import {
   createCommentByImage,
   getCommentByImage,
 } from "../services/commentApi";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import useAxiosAuth from "@/hooks/useAxiosAuth";
 
 export const useCommentByImage = (image_id) => {
   return useQueryNoRefecth(

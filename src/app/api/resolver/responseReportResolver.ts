@@ -1,4 +1,4 @@
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import useAxiosAuth from "@/hooks/useAxiosAuth";
 import { generateResponseReport } from "../services/responseReportApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useQueryNoRefecth from "../hooks/useQueryNoRefetch";

@@ -5,7 +5,7 @@ import {
   getUserByUsername,
   updateProfileUser,
 } from "../services/userApi";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import useAxiosAuth from "@/hooks/useAxiosAuth";
 
 export const useUserById = (id) => {
   const axiosAuth = useAxiosAuth();

@@ -6,7 +6,7 @@ import {
   getLikeByUser,
 } from "../services/likeApi";
 import useQueryNoRefecth from "../hooks/useQueryNoRefetch";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import useAxiosAuth from "@/hooks/useAxiosAuth";
 
 export const useLikeByImage = (data) => {
   const axiosAuth = useAxiosAuth();
@@ -31,7 +31,7 @@ export const useCreateLikeByImage = () => {
     onSettled: async (data, variables, context) => {
       await queryClient.invalidateQueries({ queryKey: ["images"] }),
         await queryClient.invalidateQueries({
-          queryKey: ["image", context?.like.image_id],
+          queryKey: ["image", context.image_id],
         });
     },
   });
@@ -45,7 +45,7 @@ export const useDislikeImage = () => {
     onSettled: async (data, variables, context) => {
       await queryClient.invalidateQueries({ queryKey: ["images"] }),
         await queryClient.invalidateQueries({
-          queryKey: ["image", context?.like.image_id],
+          queryKey: ["image", context.image_id],
         });
     },
   });

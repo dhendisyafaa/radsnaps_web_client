@@ -1,4 +1,4 @@
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import useAxiosAuth from "@/hooks/useAxiosAuth";
 import useQueryNoRefecth from "../hooks/useQueryNoRefetch";
 import {
   deleteContentReported,
