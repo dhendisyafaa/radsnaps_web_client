@@ -22,13 +22,15 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import LoadingOval from "../common/loader/LoadingOval";
+import { signIn } from "next-auth/react";
+import { Skeleton } from "../ui/skeleton";
 
 export default function FormCreateAlbum() {
   const { toast } = useToast();
   const [selectedFile, setSelectedFile] = useState();
   const [preview, setPreview] = useState();
   const { mutateAsync: createAlbum, isPending } = useCreateAlbum();
-  const { user_id } = useUserData();
+  const { user_id, status } = useUserData();
   const [openDialog, setOpenDialog] = useState(false);
 
   const formSchema = z.object({
@@ -91,18 +93,27 @@ export default function FormCreateAlbum() {
     setSelectedFile(e.target.files[0]);
   };
 
+  const handleCreateAlbum = () => {
+    if (status === "authenticated") return setOpenDialog(true);
+    else if (status === "unauthenticated") return signIn();
+  };
+
   const isSubmitting = form.formState.isSubmitting;
 
   return (
     <Drawer open={openDialog} onClose={() => setOpenDialog(false)}>
-      <Button
-        variant={"outline"}
-        className="flex items-center gap-2"
-        onClick={() => setOpenDialog(true)}
-      >
-        <Plus />
-        <p className="hidden md:block">Create album</p>
-      </Button>
+      {status === "loading" ? (
+        <Skeleton className="h-10 w-44 mb-3" />
+      ) : (
+        <Button
+          variant={"outline"}
+          className="flex items-center gap-2"
+          onClick={() => handleCreateAlbum()}
+        >
+          <Plus />
+          <p className="hidden md:block">Create album</p>
+        </Button>
+      )}
       <DrawerContent className="max-h-[90vh]">
         <div className="container py-10 overflow-y-auto">
           <Form {...form}>
