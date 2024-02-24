@@ -4,9 +4,9 @@ export const useUserData = () => {
   const { data: session, status } = useSession();
   return {
     status,
-    user_id: session?.user.id,
-    username: session?.user.username,
-    email: session?.user.email,
-    avatar: session?.user.avatar,
+    user_id: session?.user.parsed.id,
+    username: session?.user.parsed.username,
+    email: session?.user.parsed.email,
+    avatar: session?.user.parsed.avatar,
   };
 };
