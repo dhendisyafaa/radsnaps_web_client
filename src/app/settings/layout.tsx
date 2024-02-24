@@ -12,15 +12,7 @@ const sidebarNavItems = [
     title: "Profile",
     href: "/settings",
   },
-  {
-    title: "Account",
-    href: "/settings/account",
-  },
 ];
-
-interface SettingsLayoutProps {
-  children: React.ReactNode;
-}
 
 export default function SettingLayout({ children }) {
   return (
