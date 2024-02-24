@@ -1,10 +1,10 @@
 "use client";
 
-import AlbumGridView from "@/components/album/AlbumGridView";
 import SkeletonAlbum from "@/components/common/skeleton/SkeletonAlbum";
 import SkeletonGallery from "@/components/common/skeleton/SkeletonGallery";
+import AlbumContentSearch from "@/components/content/AlbumContentSearch";
+import ImageContentSearch from "@/components/content/ImageContentSearch";
 import SeachBarComponent from "@/components/form/SeachBarComponent";
-import GalleryGridView from "@/components/gallery/GalleryGridView";
 import { useRouter } from "next/navigation";
 import { useContentBySearch } from "../../api/resolver/contentResolver";
 
@@ -56,29 +56,3 @@ export default function SearchPage({ params, searchParams }) {
     </div>
   );
 }
-
-export const ImageContentSearch = ({ images }) => {
-  return images != 0 ? (
-    <GalleryGridView
-      images={images}
-      className={
-        "columns-2 gap-3 lg:gap-5 space-y-5 sm:columns-3 lg:columns-4 xl:columns-5"
-      }
-    />
-  ) : (
-    "empty state when search empty"
-  );
-};
-
-export const AlbumContentSearch = ({ albums }) => {
-  return albums.length !== 0 ? (
-    <AlbumGridView
-      albums={albums}
-      className={
-        "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"
-      }
-    />
-  ) : (
-    "empty state albums"
-  );
-};
