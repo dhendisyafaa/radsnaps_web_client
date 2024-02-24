@@ -1,13 +1,20 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
-import { cn } from "@/lib/utils";
 
-export default function CardContentDashboard({
+interface CardContentDashboardProps {
+  className?: string;
+  icon?: React.ReactElement;
+  titleCard?: string;
+  content?: string;
+}
+
+const CardContentDashboard: React.FC<CardContentDashboardProps> = ({
   className,
   icon,
   titleCard,
   content,
-}) {
+}) => {
   return (
     <Card className={cn(className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -17,4 +24,6 @@ export default function CardContentDashboard({
       <CardContent>{content}</CardContent>
     </Card>
   );
-}
+};
+
+export default CardContentDashboard;
