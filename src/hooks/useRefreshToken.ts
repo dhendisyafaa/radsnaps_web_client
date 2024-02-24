@@ -1,6 +1,6 @@
 "use client";
 import { signIn, useSession } from "next-auth/react";
-import axios from "../axios";
+import axios from "../lib/axios";
 
 export default function useRefreshToken() {
   const { data: session } = useSession();
@@ -12,7 +12,7 @@ export default function useRefreshToken() {
       },
     });
 
-    if (session) session.user.accessToken = res.data.accessToken;
+    if (session) session.user.accessToken = res.data.data.accessToken;
     else signIn();
   };
   return refreshToken;
