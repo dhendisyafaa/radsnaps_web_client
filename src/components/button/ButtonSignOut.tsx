@@ -19,21 +19,14 @@ import { Button } from "../ui/button";
 export default function ButtonSignOut() {
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
-        <Button
-          variant={"ghost"}
-          className="w-full border justify-between gap-1 items-center"
-        >
-          Sign out
-          <LogOut className="w-4 h-4" />
-        </Button>
+      <AlertDialogTrigger className="w-full text-start rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
+        Sign out
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            You must re-login to use the Radsnaps feature optimally.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

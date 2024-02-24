@@ -32,20 +32,25 @@ export default function UserRegisterForm() {
 
   const formSchema = z.object({
     fullname: z.string().min(2, {
-      message: "Fullname wajib untuk diisi",
+      message: "Fullname is required",
     }),
     username: z.string().min(2, {
-      message: "Username wajib untuk diisi",
+      message: "Username is required",
     }),
     email: z
       .string()
       .min(2, {
-        message: "Email wajib untuk diisi",
+        message: "Email is required",
       })
       .email(),
-    password: z.string().min(2, {
-      message: "Password wajib untuk diisi",
-    }),
+    password: z
+      .string()
+      .min(2, {
+        message: "Password is required",
+      })
+      .min(5, {
+        message: "Password at least 5 characters",
+      }),
   });
 
   const form = useForm({
