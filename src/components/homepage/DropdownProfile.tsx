@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import ButtonSignOut from "../button/ButtonSignOut";
 
 export default function DropdownProfile() {
   const { username, email, avatar, status } = useUserData();
@@ -53,6 +54,7 @@ export default function DropdownProfile() {
           <DropdownMenuItem onClick={() => push("/settings")}>
             Settings
           </DropdownMenuItem>
+          <ButtonSignOut />
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <ModeToggle />
