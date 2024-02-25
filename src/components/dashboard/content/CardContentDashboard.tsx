@@ -1,29 +1,16 @@
-import { cn } from "@/lib/utils";
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { formatNumber } from "@/utils/formatNumber";
 
-interface CardContentDashboardProps {
-  className?: string;
-  icon?: React.ReactElement;
-  titleCard?: string;
-  content?: string;
-}
+export default function CardContentDashboard({ content, loading }) {
+  if (loading) return <Skeleton className="w-full h-4" />;
+  const contentCard = content.data.data;
 
-const CardContentDashboard: React.FC<CardContentDashboardProps> = ({
-  className,
-  icon,
-  titleCard,
-  content,
-}) => {
   return (
-    <Card className={cn(className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{titleCard}</CardTitle>
-        <div className="[&_svg]:h-4 [&_svg]:w-4">{icon}</div>
-      </CardHeader>
-      <CardContent>{content}</CardContent>
-    </Card>
+    <div className="">
+      <p className="font-bold text-lg md:text-2xl">
+        {formatNumber(contentCard)}
+      </p>
+      <p className="text-xs text-muted-foreground">from this admin created</p>
+    </div>
   );
-};
-
-export default CardContentDashboard;
+}
