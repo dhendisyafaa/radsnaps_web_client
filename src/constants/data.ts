@@ -30,12 +30,12 @@ export const NAVSIDEBARITEMS = [
     icon: "flag",
     label: "Report",
   },
-  {
-    title: "Settings",
-    href: "/dashboard/settings",
-    icon: "settings",
-    label: "setting",
-  },
+  // {
+  //   title: "Settings",
+  //   href: "/dashboard/settings",
+  //   icon: "settings",
+  //   label: "setting",
+  // },
 ];
 
 export const REPORTISSUES = [
