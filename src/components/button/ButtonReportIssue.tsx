@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { Flag } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React from "react";
 import { Skeleton } from "../ui/skeleton";
 
 export default function ButtonReportIssue({
@@ -31,7 +30,7 @@ export default function ButtonReportIssue({
     <div
       onClick={() => handleReportContent()}
       className={cn(
-        `flex gap-1 items-center text-[8px] cursor-pointer`,
+        `flex gap-1 items-center cursor-pointer`,
         flexColLayout && "flex-col",
         className
       )}

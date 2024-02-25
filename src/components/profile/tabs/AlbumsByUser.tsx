@@ -1,16 +1,13 @@
 import { useAlbumsByUser } from "@/app/api/resolver/albumResolver";
 import AlbumGridView from "@/components/album/AlbumGridView";
-import { useUserData } from "@/hooks/useUserData";
 
-export default function AlbumsByUser() {
-  const { user_id } = useUserData();
-
+export default function AlbumsByUser({ userId }) {
   const {
     data: albumsUser,
     isLoading,
     isError,
     error,
-  } = useAlbumsByUser({ user_id });
+  } = useAlbumsByUser({ user_id: userId });
 
   if (isLoading) return <p>load...</p>;
   if (isError) return <p>error: {error}</p>;

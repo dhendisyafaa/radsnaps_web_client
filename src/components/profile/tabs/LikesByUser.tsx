@@ -1,17 +1,14 @@
 import { useLikeByUser } from "@/app/api/resolver/likeResolver";
 import GalleryGridView from "@/components/gallery/GalleryGridView";
-import { useUserData } from "@/hooks/useUserData";
 
-export default function LikesByUser() {
-  const { user_id } = useUserData();
-
+export default function LikesByUser({ userId }) {
   const {
     data: likedImages,
     isLoading,
     isError,
     error,
   } = useLikeByUser({
-    user_id,
+    user_id: userId,
   });
   if (isLoading) return <p>load...</p>;
   if (isError) return <p>error: {error}</p>;

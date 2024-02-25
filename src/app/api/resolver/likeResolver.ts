@@ -41,8 +41,8 @@ export const useDislikeImage = () => {
   const axiosAuth = useAxiosAuth();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id) => dislikeImage(axiosAuth, id),
-    onSettled: async (data, variables, context) => {
+    mutationFn: (data) => dislikeImage(axiosAuth, data.id),
+    onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({ queryKey: ["images"] }),
         await queryClient.invalidateQueries({
           queryKey: ["image", context.image_id],

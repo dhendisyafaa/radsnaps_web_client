@@ -1,17 +1,14 @@
 import { useImagesByUser } from "@/app/api/resolver/imageResolver";
 import GalleryGridView from "@/components/gallery/GalleryGridView";
-import { useUserData } from "@/hooks/useUserData";
-import React from "react";
 
-export default function PostsByUser() {
-  const { user_id } = useUserData();
+export default function PostsByUser({ userId }) {
   const {
     data: imagesUser,
     isLoading,
     isError,
     error,
   } = useImagesByUser({
-    user_id,
+    user_id: userId,
   });
   if (isLoading) return <p>load...</p>;
   if (isError) return <p>error: {error}</p>;

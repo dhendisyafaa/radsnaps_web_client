@@ -1,6 +1,6 @@
 "use client";
 
-import FormEditProfileUser from "@/components/form/formEditProfileUser";
+import FormEditProfileUser from "@/components/form/FormEditProfile";
 import { useUserData } from "@/hooks/useUserData";
 import { useUserByUsername } from "../api/resolver/userResolver";
 

@@ -62,10 +62,8 @@ export default function DrawerDialogShare({
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="container pb-6">
         <DrawerHeader>
-          <DrawerTitle>Share this image</DrawerTitle>
-          <DrawerDescription>
-            Share this photo to people who want to see it
-          </DrawerDescription>
+          <DrawerTitle>{title}</DrawerTitle>
+          <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
         <DrawerShareContent url={url} />
       </DrawerContent>

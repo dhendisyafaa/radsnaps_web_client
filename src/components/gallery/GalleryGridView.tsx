@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ButtonLike from "../button/ButtonLike";
 import ButtonSaveToAlbum from "../button/ButtonSaveToAlbum";
-import DrawerDialogShare from "../drawer/DrawerShareContent";
+import DrawerDialogShare from "../drawer/DrawerDialogShare";
 import { useLongPress } from "use-long-press";
 
 export default function GalleryGridView({
@@ -46,7 +46,7 @@ export default function GalleryGridView({
                 <Image
                   src={image.image_url}
                   alt={`image ${image.image_name} from owner ${image.owner.username}`}
-                  loading="lazy"
+                  priority
                   width={image.width}
                   height={image.height}
                   quality={75}
@@ -73,6 +73,7 @@ export default function GalleryGridView({
                       <ButtonLike
                         likes={image.likes}
                         image_id={image.id || image.image_id}
+                        className={"text-xs [&_svg]:h-5 [&_svg]:w-5"}
                       />
                     )}
                     {withButtonShare && (

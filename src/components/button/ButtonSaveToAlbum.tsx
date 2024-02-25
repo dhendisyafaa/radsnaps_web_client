@@ -78,7 +78,7 @@ export default function ButtonSaveToAlbum({
     <div>
       <div
         className={cn(
-          `flex flex-col gap-1 text-center items-center text-xs [&_svg]:h-5 [&_svg]:w-5 lg:[&_svg]:h-6 lg:[&_svg]:w-6 cursor-pointer`,
+          `flex flex-col gap-1 items-center cursor-pointer`,
           className
         )}
         onClick={() =>

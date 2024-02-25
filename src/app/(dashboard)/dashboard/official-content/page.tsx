@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 export default function OfficialContent() {
   const { push } = useRouter();
   return (
-    <Accordion type="multiple" collapsible="true" defaultValue="image">
+    <Accordion type="multiple">
       <AccordionItem value="album">
         <div className="flex justify-between items-center">
           <AccordionTrigger>

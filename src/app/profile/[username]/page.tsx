@@ -1,10 +1,12 @@
 "use client";
 import { useUserByUsername } from "@/app/api/resolver/userResolver";
 import ButtonReportIssue from "@/components/button/ButtonReportIssue";
-import ButtonShare from "@/components/button/ButtonShare";
-import DrawerDialogShare from "@/components/drawer/DrawerShareContent";
+import DrawerDialogEditProfile from "@/components/drawer/DrawerDialogEditProfile";
+import DrawerDialogShare from "@/components/drawer/DrawerDialogShare";
+import FormEditAvatar from "@/components/form/FormEditAvatar";
+import AvatarUserComponent from "@/components/profile/AvatarUserComponent";
 import TabsProfile from "@/components/profile/TabsProfile";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,15 +14,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserData } from "@/hooks/useUserData";
-import { Link as LinkIcon, MoreHorizontal } from "lucide-react";
+import { Edit, Link as LinkIcon, MoreHorizontal, Verified } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../components/ui/dialog";
 
 export default function ProfilePage({ params }) {
   const { username } = useUserData();
   const { push } = useRouter();
   const [drawerShare, setDrawerShare] = useState(false);
+  const [drawerProfile, setDrawerProfile] = useState(false);
   const {
     data: userData,
     isLoading,
@@ -43,6 +53,11 @@ export default function ProfilePage({ params }) {
               <p className="md:text-2xl text-xl text-foreground font-bold tracking-wide capitalize">
                 {user.fullname}
               </p>
+              {user.role === "ADMIN" && (
+                <Badge className="w-fit p-1 rounded-full [&_svg]:w-4 [&_svg]:h-4">
+                  <Verified />
+                </Badge>
+              )}
               {username !== params.username && (
                 <DropdownMenu>
                   <DropdownMenuTrigger className="[&_svg]:w-4 [&_svg]:h-4">
@@ -60,13 +75,32 @@ export default function ProfilePage({ params }) {
               )}
             </div>
             <p className="text-sm text-foreground tracking-wide">
-              {user.username}
+              @{user.username}
             </p>
           </div>
-          <Avatar className="w-16 h-16 md:w-20 md:h-20">
-            <AvatarImage src={user.avatar} />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <Dialog>
+            <DialogTrigger className="relative overflow-hidden rounded-full">
+              <div className="absolute inset-0 w-full h-full bg-black/60 z-20 grid place-items-center [&_svg]:w-5">
+                <Edit />
+              </div>
+              <AvatarUserComponent
+                imageUrl={user.avatar}
+                withUsername={false}
+                className="w-16 h-16 md:w-20 md:h-20"
+              />
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="mb-3">Edit avatar</DialogTitle>
+              </DialogHeader>
+              <FormEditAvatar avatar={user.avatar} userId={user.id} />
+            </DialogContent>
+          </Dialog>
+          {/* <AvatarUserComponent
+            withUsername={false}
+            imageUrl={user.avatar}
+            className="w-16 h-16 md:w-20 md:h-20"
+          /> */}
         </div>
         <p className="text-sm text-foreground tracking-wide">{user?.bio}</p>
         <div className="max-w-fit">
@@ -84,23 +118,16 @@ export default function ProfilePage({ params }) {
           })}
         </div>
       </div>
-      {username === params.username && (
+      {username === params.username ? (
         <div className="grid grid-cols-2 gap-2">
           <Button
             className="w-full"
             variant={"outline"}
-            onClick={() => push("/settings")}
+            onClick={() => setDrawerProfile(true)}
+            // onClick={() => push("/settings")}
           >
             Edit profile
           </Button>
-          <DrawerDialogShare
-            contentType={"user"}
-            title="Share this profile user"
-            description={`Share ${params.username} profile to people who want to see it`}
-            open={drawerShare}
-            onOpenChange={setDrawerShare}
-            url={`${baseUrl}`}
-          />
           <Button
             className="w-full"
             variant={"outline"}
@@ -109,8 +136,31 @@ export default function ProfilePage({ params }) {
             Share profile
           </Button>
         </div>
+      ) : (
+        <Button
+          className="w-full"
+          variant={"outline"}
+          onClick={() => setDrawerShare(true)}
+        >
+          Share profile
+        </Button>
       )}
-      <TabsProfile />
+      <DrawerDialogEditProfile
+        open={drawerProfile}
+        onOpenChange={setDrawerProfile}
+        profile={user}
+        title={"Edit your profile"}
+        description={"Make sure the data you changed is correct"}
+      />
+      <DrawerDialogShare
+        contentType={"user"}
+        title="Share this profile user"
+        description={`Share ${params.username} profile to people who want to see it`}
+        open={drawerShare}
+        onOpenChange={setDrawerShare}
+        url={`${baseUrl}`}
+      />
+      <TabsProfile userId={user.id} />
     </div>
   );
 }
