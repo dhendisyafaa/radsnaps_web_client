@@ -22,10 +22,10 @@ export default function DashboardLayout({
       <HeaderDashboard />
       <div className="flex h-screen overflow-hidden">
         <SidebarComponent />
-        <main className="w-full pt-20 container">
+        <main className="w-full pt-20 md:container">
           <ScrollArea className="h-full p-3">
             <div className="flex-1 space-y-4">
-              <h2 className="text-3xl font-bold tracking-tight">
+              <h2 className="text-3xl font-bold tracking-tight p-3">
                 Hi,{" "}
                 <span className="bg-gradient-to-br from-purple-950 via-purple-600 to-purple-950 bg-clip-text text-transparent">
                   Snaps Admin
