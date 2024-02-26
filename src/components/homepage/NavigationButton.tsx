@@ -64,7 +64,7 @@ export default function NavigationButton() {
                 : "bg-background text-foreground"
             )}
           >
-            <div className="md:hidden [&_svg]:h-5 [&_svg]:w-5">
+            <div className="md:hidden [&_svg]:h-5 [&_svg]:w-5 text-white">
               <Plus />
             </div>
           </div>
