@@ -21,7 +21,7 @@ export default function ButtonShare({ className }) {
         )}
       >
         <Share2 />
-        <p className="text-primary-foreground">Share</p>
+        <p className="text-foreground">Share</p>
       </div>
     </>
   );
