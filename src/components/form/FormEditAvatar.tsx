@@ -2,7 +2,7 @@ import { useUpdateAvatarUser } from "@/app/api/resolver/userResolver";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import LoadingOval from "../common/loader/LoadingOval";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import AvatarUserComponent from "../profile/AvatarUserComponent";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
@@ -13,11 +13,8 @@ export default function FormEditAvatar({ avatar, username, userId }) {
   // const updateAvatar = () => {};
   const { mutateAsync: updateAvatarUser, isPending } = useUpdateAvatarUser();
   const removeAvatar = () => {};
-  const [preview, setPreview] = useState("");
-  const [file, setFile] = useState("");
-  const [warningFile, setWarningFile] = useState();
   const [selectedFile, setSelectedFile] = useState();
-  console.log("🚀 ~ FormEditAvatar ~ selectedFile:", selectedFile);
+  const [preview, setPreview] = useState();
 
   const form = useForm({});
   const { toast } = useToast();
@@ -55,20 +52,6 @@ export default function FormEditAvatar({ avatar, username, userId }) {
     }
   };
 
-  const getImageData = (event) => {
-    const image = event.target.files[0];
-    setFile(image);
-    const dataTransfer = new DataTransfer();
-    Array.from(event.target?.files).forEach((image) =>
-      dataTransfer.items.add(image)
-    );
-
-    const files = dataTransfer.files;
-    const displayUrl = URL.createObjectURL(event.target?.files[0]);
-
-    return { files, displayUrl };
-  };
-
   useEffect(() => {
     if (!selectedFile) {
       setPreview(undefined);
@@ -78,7 +61,7 @@ export default function FormEditAvatar({ avatar, username, userId }) {
     const objectUrl = URL.createObjectURL(selectedFile);
     setPreview(objectUrl);
     return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedFile, setPreview]);
+  }, [selectedFile]);
 
   const onSelectFile = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -96,24 +79,20 @@ export default function FormEditAvatar({ avatar, username, userId }) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex items-end flex-wrap sm:flex-nowrap gap-3">
-            {preview ? (
-              <Avatar className="w-20 h-20 border-primary border-2">
-                <AvatarImage
-                  className="object-cover"
-                  alt="new avatar"
-                  src={preview}
-                />
-                <AvatarFallback>newAvatar</AvatarFallback>
-              </Avatar>
+            {selectedFile ? (
+              <AvatarUserComponent
+                className="w-20 h-20 border-primary border-2"
+                imageUrl={preview}
+                username={username}
+                withUsername={false}
+              />
             ) : (
-              <Avatar className="w-20 h-20 border-primary border-2">
-                <AvatarImage
-                  className="object-cover"
-                  alt={`avatar from @${username}`}
-                  src={avatar}
-                />
-                <AvatarFallback>{username}</AvatarFallback>
-              </Avatar>
+              <AvatarUserComponent
+                className="w-20 h-20 border-primary border-2 text-2xl"
+                imageUrl={avatar}
+                username={username}
+                withUsername={false}
+              />
             )}
             <FormField
               control={form.control}
@@ -121,7 +100,7 @@ export default function FormEditAvatar({ avatar, username, userId }) {
               render={({ field: { onChange, value, ...rest } }) => (
                 <>
                   <FormItem>
-                    <FormLabel>Choose a profile picture (max 3MB)</FormLabel>
+                    <FormLabel>Choose a profile picture</FormLabel>
                     <FormControl>
                       <Input
                         {...rest}
@@ -130,34 +109,15 @@ export default function FormEditAvatar({ avatar, username, userId }) {
                         type="file"
                         disabled={isSubmitting || isPending}
                         onChange={onSelectFile}
-                        // type="file"
-                        // accept="image/*"
-                        // name="data_image"
-                        // multiple={true}
-                        // disabled={form.formState.isSubmitting}
-                        // {...rest}
-                        // onChange={(event) => {
-                        //   const { files, displayUrl } = getImageData(event);
-                        //   setPreview(displayUrl);
-                        //   onChange(files);
-                        //   setWarningFile(
-                        //     files[0].size > 3000000
-                        //       ? "Photo size more than 3MB"
-                        //       : null
-                        //   );
-                        // }}
                       />
                     </FormControl>
-                    {warningFile && (
-                      <p className="text-destructive text-xs">{`*${warningFile}`}</p>
-                    )}
                   </FormItem>
                 </>
               )}
             />
             <Button
               type="submit"
-              disabled={isPending || !preview || warningFile != undefined}
+              disabled={isPending || !preview}
               className="flex gap-3 w-full sm:max-w-fit"
             >
               {isPending && <LoadingOval />}
