@@ -13,10 +13,10 @@ export const FILTERIMAGE = [
 
 export const NAVSIDEBARITEMS = [
   {
-    title: "Dashboard",
+    title: "Analytics",
     href: "/dashboard",
-    icon: "dashboard",
-    label: "Dashboard",
+    icon: "lineChart",
+    label: "analytics",
   },
   {
     title: "Official Content",
