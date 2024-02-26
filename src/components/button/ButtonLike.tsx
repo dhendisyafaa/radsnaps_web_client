@@ -6,10 +6,10 @@ import {
 } from "@/app/api/resolver/likeResolver";
 import { useUserData } from "@/hooks/useUserData";
 import { cn } from "@/lib/utils";
+import { formatNumber } from "@/utils/formatNumber";
 import { Heart } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useToast } from "../ui/use-toast";
-import { formatNumber } from "@/utils/formatNumber";
 
 export default function ButtonLike({
   likes,
@@ -46,7 +46,6 @@ export default function ButtonLike({
             like.user ? like.user.id === user_id : like.user_id === user_id
           );
           if (likeToDelete) {
-            console.log("likeToDelete.id", likeToDelete.id);
             await dislike({
               id: likeToDelete.id,
               image_id,
@@ -87,11 +86,9 @@ export default function ButtonLike({
       {isUserLikedImage ? (
         <Heart className="text-primary fill-primary" />
       ) : (
-        <Heart className="text-white hover:fill-primary hover:text-primary duration-100 transition-all ease-in-out" />
+        <Heart className="hover:fill-primary hover:text-primary duration-100 transition-all ease-in-out" />
       )}
-      {withLikeLength && (
-        <p className="text-primary-foreground">{formatNumber(lengthLikes)}</p>
-      )}
+      {withLikeLength && <p>{formatNumber(lengthLikes)}</p>}
     </div>
   );
 }
