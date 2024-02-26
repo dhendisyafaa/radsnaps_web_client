@@ -14,7 +14,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserData } from "@/hooks/useUserData";
-import { Edit, Link as LinkIcon, MoreHorizontal, Verified } from "lucide-react";
+import {
+  ChevronLeft,
+  Link as LinkIcon,
+  MoreHorizontal,
+  Pencil,
+  Verified,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -28,7 +34,7 @@ import {
 
 export default function ProfilePage({ params }) {
   const { username } = useUserData();
-  const { push } = useRouter();
+  const { push, back } = useRouter();
   const [drawerShare, setDrawerShare] = useState(false);
   const [drawerProfile, setDrawerProfile] = useState(false);
   const {
@@ -49,6 +55,15 @@ export default function ProfilePage({ params }) {
       <div className="space-y-1">
         <div className="flex items-center justify-between">
           <div>
+            <div
+              className="flex items-center gap-2 cursor-pointer mb-6 group w-fit"
+              onClick={() => back()}
+            >
+              <div className="rounded-full p-1 bg-secondary/50 group-hover:bg-secondary/30">
+                <ChevronLeft className="w-5 h-5" />
+              </div>
+              <p className="text-foreground font-semibold">Back</p>
+            </div>
             <div className="flex gap-3 items-center">
               <p className="md:text-2xl text-xl text-foreground font-bold tracking-wide capitalize">
                 {user.fullname}
@@ -78,29 +93,35 @@ export default function ProfilePage({ params }) {
               @{user.username}
             </p>
           </div>
-          <Dialog>
-            <DialogTrigger className="relative overflow-hidden rounded-full">
-              <div className="absolute inset-0 w-full h-full bg-black/60 z-20 grid place-items-center [&_svg]:w-5">
-                <Edit />
+          {/* <Dialog>
+            <DialogTrigger className="relative overflow-hidden">
+              <div className="text-primary-foreground absolute bottom-1 right-1 w-6 h-6 bg-primary rounded-full z-20 grid place-items-center [&_svg]:w-3">
+                <Pencil />
               </div>
               <AvatarUserComponent
                 imageUrl={user.avatar}
                 withUsername={false}
-                className="w-16 h-16 md:w-20 md:h-20"
+                username={user.username}
+                className="w-16 h-16 md:w-20 md:h-20 text-2xl md:text-4xl"
               />
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle className="mb-3">Edit avatar</DialogTitle>
               </DialogHeader>
-              <FormEditAvatar avatar={user.avatar} userId={user.id} />
+              <FormEditAvatar
+                avatar={user.avatar}
+                userId={user.id}
+                username={user.username}
+              />
             </DialogContent>
-          </Dialog>
-          {/* <AvatarUserComponent
-            withUsername={false}
+          </Dialog> */}
+          <AvatarUserComponent
             imageUrl={user.avatar}
-            className="w-16 h-16 md:w-20 md:h-20"
-          /> */}
+            withUsername={false}
+            username={user.username}
+            className="w-16 h-16 md:w-20 md:h-20 text-2xl md:text-4xl"
+          />
         </div>
         <p className="text-sm text-foreground tracking-wide">{user?.bio}</p>
         <div className="max-w-fit">
