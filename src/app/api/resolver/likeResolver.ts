@@ -1,12 +1,12 @@
+import useAxiosAuth from "@/hooks/useAxiosAuth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useQueryNoRefecth from "../hooks/useQueryNoRefetch";
 import {
   createLikeImage,
   dislikeImage,
   getLikeByImage,
   getLikeByUser,
 } from "../services/likeApi";
-import useQueryNoRefecth from "../hooks/useQueryNoRefetch";
-import useAxiosAuth from "@/hooks/useAxiosAuth";
 
 export const useLikeByImage = (data) => {
   const axiosAuth = useAxiosAuth();
@@ -28,11 +28,14 @@ export const useCreateLikeByImage = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => createLikeImage(axiosAuth, data),
-    onSettled: async (data, variables, context) => {
-      await queryClient.invalidateQueries({ queryKey: ["images"] }),
-        await queryClient.invalidateQueries({
-          queryKey: ["image", context.image_id],
-        });
+    onSuccess: async (data, variables, context) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["image", `${variables.image_id}`],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["image-album", `${variables.image_id}`],
+      });
+      await queryClient.invalidateQueries({ queryKey: ["images"] });
     },
   });
 };
@@ -43,10 +46,13 @@ export const useDislikeImage = () => {
   return useMutation({
     mutationFn: (data) => dislikeImage(axiosAuth, data.id),
     onSuccess: async (data, variables, context) => {
-      await queryClient.invalidateQueries({ queryKey: ["images"] }),
-        await queryClient.invalidateQueries({
-          queryKey: ["image", context.image_id],
-        });
+      await queryClient.invalidateQueries({
+        queryKey: ["image", `${variables.image_id}`],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["image-album", `${variables.image_id}`],
+      });
+      await queryClient.invalidateQueries({ queryKey: ["images"] });
     },
   });
 };
