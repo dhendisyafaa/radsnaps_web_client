@@ -26,7 +26,7 @@ export default function DropdownProfile() {
   const firstLetterUsername = username?.split("", 1);
 
   if (isLoading) return <Skeleton className="w-8 h-8 rounded-full" />;
-  const avatar = avatarUser.data.data;
+  const avatar = avatarUser?.data.data;
 
   return (
     <DropdownMenu>
