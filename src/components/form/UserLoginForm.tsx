@@ -1,11 +1,16 @@
 "use client";
+import { useToast } from "@/components/ui/use-toast";
+import { baseUrlWeb } from "@/configs/config";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import LoadingThreeDoots from "../common/loader/LoadingThreeDoots";
+import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -15,13 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useToast } from "@/components/ui/use-toast";
 import { Input } from "../ui/input";
-import Image from "next/image";
-import Link from "next/link";
-import LoadingThreeDoots from "../common/loader/LoadingThreeDoots";
-import { Icons } from "../icons";
-import { baseUrlWeb } from "@/configs/config";
 
 export default function UserLoginForm() {
   const [loadingButton, setloadingButton] = React.useState<boolean>(false);
@@ -37,12 +36,17 @@ export default function UserLoginForm() {
     email: z
       .string()
       .min(2, {
-        message: "Email wajib untuk diisi",
+        message: "Email is required",
       })
       .email(),
-    password: z.string().min(2, {
-      message: "Password wajib untuk diisi",
-    }),
+    password: z
+      .string()
+      .min(2, {
+        message: "Password is required",
+      })
+      .min(5, {
+        message: "Password at least 5 characters",
+      }),
   });
 
   const form = useForm({
@@ -101,7 +105,7 @@ export default function UserLoginForm() {
         </Link>
       </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="email"
@@ -141,7 +145,7 @@ export default function UserLoginForm() {
           </Button>
         </form>
       </Form>
-      <div className="relative">
+      {/* <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
         </div>
@@ -165,7 +169,7 @@ export default function UserLoginForm() {
       >
         <Icon height={20} width={20} />
         Google
-      </Button>
+      </Button> */}
     </div>
   );
 }

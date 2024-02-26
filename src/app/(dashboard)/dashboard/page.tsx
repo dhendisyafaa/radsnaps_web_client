@@ -1,4 +1,14 @@
+"use client";
+
+import {
+  useTotalAlbums,
+  useTotalImages,
+  useTotalUsers,
+} from "@/app/api/resolver/dashboardResolver";
 import CardContentDashboard from "@/components/dashboard/content/CardContentDashboard";
+import CardDashboard from "@/components/dashboard/content/CardDashboard";
+import UserAnalythics from "@/components/dashboard/content/UserAnalythics";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   GalleryHorizontal,
@@ -6,35 +16,58 @@ import {
   UsersRound,
 } from "lucide-react";
 
-export default function page() {
+export default function DashboardPage() {
+  const { data: totalUsers, isLoading: loadTotalUsers } = useTotalUsers();
+  const { data: totalImages, isLoading: loadTotalImages } = useTotalImages();
+  const { data: totalAlbums, isLoading: loadTotalAlbums } = useTotalAlbums();
+
   return (
     <Tabs defaultValue="overview" className="space-y-4">
       <TabsList>
         <TabsTrigger value="overview">Overview</TabsTrigger>
-        <TabsTrigger value="analytics">Analytics</TabsTrigger>
+        {/* <TabsTrigger value="analytics">Analytics</TabsTrigger> */}
       </TabsList>
       <TabsContent value="overview" className="space-y-4">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <CardContentDashboard
+          <CardDashboard
             titleCard={"Total Users"}
             icon={<UsersRound />}
-            content={"sdsd"}
+            content={
+              <CardContentDashboard
+                content={totalUsers}
+                loading={loadTotalUsers}
+              />
+            }
           />
-          <CardContentDashboard
+          <CardDashboard
             titleCard={"All Images"}
             icon={<GalleryHorizontal />}
-            content={"sdsd"}
+            content={
+              <CardContentDashboard
+                content={totalImages}
+                loading={loadTotalImages}
+              />
+            }
           />
-          <CardContentDashboard
+          <CardDashboard
             titleCard={"All Albums"}
             icon={<GalleryHorizontalEnd />}
-            content={"sdsd"}
+            content={
+              <CardContentDashboard
+                content={totalAlbums}
+                loading={loadTotalAlbums}
+              />
+            }
           />
         </div>
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
-          <CardContentDashboard className="col-span-4" />
-          <CardContentDashboard className="col-span-4 md:col-span-3" />
-        </div>
+        <Card className="col-span-4">
+          <CardHeader>
+            <CardTitle>User Analythics</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+            <UserAnalythics />
+          </CardContent>
+        </Card>
       </TabsContent>
     </Tabs>
   );

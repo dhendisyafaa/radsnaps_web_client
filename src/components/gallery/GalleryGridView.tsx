@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useLongPress } from "use-long-press";
 import ButtonLike from "../button/ButtonLike";
 import ButtonSaveToAlbum from "../button/ButtonSaveToAlbum";
-import DrawerDialogShare from "../drawer/DrawerShareContent";
-import { useLongPress } from "use-long-press";
+import DrawerDialogShare from "../drawer/DrawerDialogShare";
 
 export default function GalleryGridView({
   images,
@@ -46,7 +46,7 @@ export default function GalleryGridView({
                 <Image
                   src={image.image_url}
                   alt={`image ${image.image_name} from owner ${image.owner.username}`}
-                  loading="lazy"
+                  priority
                   width={image.width}
                   height={image.height}
                   quality={75}
@@ -73,12 +73,14 @@ export default function GalleryGridView({
                       <ButtonLike
                         likes={image.likes}
                         image_id={image.id || image.image_id}
+                        className={"text-xs [&_svg]:h-6 [&_svg]:w-6 text-white"}
                       />
                     )}
                     {withButtonShare && (
                       <ButtonSaveToAlbum
                         image_id={image.id || image.image_id}
                         withLabel={false}
+                        className={"text-xs [&_svg]:h-6 [&_svg]:w-6 text-white"}
                       />
                     )}
                   </div>

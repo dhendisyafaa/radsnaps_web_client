@@ -65,7 +65,10 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token, user }) {
-      session.user = jwtDecode(token.accessToken);
+      session.user = {
+        ...token,
+        parsed: jwtDecode(token.accessToken),
+      };
       return session;
     },
   },

@@ -9,7 +9,7 @@ import {
   getDetailAlbum,
   updateDetailAlbum,
 } from "../services/albumApi";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import useAxiosAuth from "@/hooks/useAxiosAuth";
 
 export const useAllAlbum = () => {
   return useQueryNoRefecth(["albums"], async () => await getAllAlbum());

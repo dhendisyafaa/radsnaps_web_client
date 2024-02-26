@@ -1,7 +1,11 @@
+"use client";
+
+import { useUserData } from "@/hooks/useUserData";
 import { cn } from "@/lib/utils";
 import { Flag } from "lucide-react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import { Skeleton } from "../ui/skeleton";
 
 export default function ButtonReportIssue({
   className,
@@ -12,11 +16,21 @@ export default function ButtonReportIssue({
   flexColLayout = true,
 }) {
   const { push } = useRouter();
-  return (
+  const { status } = useUserData();
+
+  const handleReportContent = () => {
+    if (status === "authenticated")
+      return push(`/report/report-issue/${content_type}/${content_id}`);
+    else if (status === "unauthenticated") return signIn();
+  };
+
+  return status === "loading" ? (
+    <Skeleton className="w-8 h-8 rounded-full" />
+  ) : (
     <div
-      onClick={() => push(`/report/report-issue/${content_type}/${content_id}`)}
+      onClick={() => handleReportContent()}
       className={cn(
-        `flex gap-1 items-center text-[8px] cursor-pointer`,
+        `flex gap-1 items-center cursor-pointer`,
         flexColLayout && "flex-col",
         className
       )}

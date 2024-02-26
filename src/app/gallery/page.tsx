@@ -17,6 +17,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useAllImage } from "../api/resolver/imageResolver";
 import { Icons } from "@/components/icons";
+import EmptyStateComponent from "@/components/common/EmptyStateComponent";
 
 export default function GalleryPage() {
   const pathname = usePathname();
@@ -104,7 +105,7 @@ export default function GalleryPage() {
         </div>
         <SeachBarComponent endpoint={"image"} />
       </div>
-      {images.length != 0 ? (
+      {!images.length != 0 ? (
         <GalleryGridView
           images={images}
           className={
@@ -112,7 +113,13 @@ export default function GalleryPage() {
           }
         />
       ) : (
-        <p>Empty state for get all image</p>
+        <EmptyStateComponent
+          illustration={"/assets/svg/empty-image.svg"}
+          titleMessage={"No uploaded image yet"}
+          descriptionMessage={"Please upload your memorable image"}
+          buttonTitle={"Posting image"}
+          onClick={() => push(`/posting`)}
+        />
       )}
     </div>
   );

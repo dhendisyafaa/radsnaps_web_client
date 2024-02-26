@@ -2,8 +2,8 @@ import { useImageByAlbum } from "@/app/api/resolver/imageResolver";
 import SkeletonAlbum from "../common/skeleton/SkeletonAlbum";
 import GalleryGridView from "../gallery/GalleryGridView";
 
-export default function ImagesAlbum({ album_id }) {
-  const { data: imagesAlbum, isLoading } = useImageByAlbum(album_id);
+export default function ImagesAlbum({ albumId }) {
+  const { data: imagesAlbum, isLoading } = useImageByAlbum(albumId);
   if (isLoading)
     return (
       <div className="container py-6">

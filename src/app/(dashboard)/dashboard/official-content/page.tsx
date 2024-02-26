@@ -1,7 +1,6 @@
 "use client";
 import OfficialAlbums from "@/components/album/OfficialAlbums";
 import FormCreateAlbum from "@/components/form/FormCreateAlbum";
-import GalleryGridView from "@/components/gallery/GalleryGridView";
 import PostsByUser from "@/components/profile/tabs/PostsByUser";
 import {
   Accordion,
@@ -16,7 +15,7 @@ import { useRouter } from "next/navigation";
 export default function OfficialContent() {
   const { push } = useRouter();
   return (
-    <Accordion type="multiple" collapsible="true" defaultValue="image">
+    <Accordion type="multiple">
       <AccordionItem value="album">
         <div className="flex justify-between items-center">
           <AccordionTrigger>
@@ -53,16 +52,3 @@ export default function OfficialContent() {
     </Accordion>
   );
 }
-
-export const OfficialImages = () => {
-  return images.length != 0 ? (
-    <GalleryGridView
-      images={images}
-      className={
-        "columns-2 gap-3 lg:gap-5 space-y-5 sm:columns-3 lg:columns-4 xl:columns-5"
-      }
-    />
-  ) : (
-    <p>Empty state for get all image</p>
-  );
-};

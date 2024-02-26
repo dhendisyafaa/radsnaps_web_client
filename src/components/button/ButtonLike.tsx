@@ -6,25 +6,34 @@ import {
 } from "@/app/api/resolver/likeResolver";
 import { useUserData } from "@/hooks/useUserData";
 import { cn } from "@/lib/utils";
+import { formatNumber } from "@/utils/formatNumber";
 import { Heart } from "lucide-react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import { useToast } from "../ui/use-toast";
 
-export default function ButtonLike({ likes, image_id, className }) {
+export default function ButtonLike({
+  likes,
+  image_id,
+  className,
+  withLikeLength = true,
+}) {
   const { mutateAsync: createLike, isPending: loadCreateLike } =
     useCreateLikeByImage();
   const { mutateAsync: dislike, isPending: loadDislike } = useDislikeImage();
   const { user_id, status } = useUserData();
+  const { toast } = useToast();
 
-  const isUserLiked = (user_id) => {
+  const isUserLiked = () => {
     return likes.some(
-      (like) => like.user_id === user_id || like?.user?.id === user_id
+      (like) =>
+        like.user ? like.user.id === user_id : like.user_id === user_id
+      // (like) => like.user_id === user_id || like?.user?.id === user_id
     );
   };
 
-  const isUserLikedImage = isUserLiked(user_id);
+  const isUserLikedImage = isUserLiked();
 
   const handleCreateLike = async () => {
-    // FIX this section, change logic signIn with credential
     if (status === "authenticated") {
       try {
         if (!isUserLikedImage) {
@@ -33,15 +42,23 @@ export default function ButtonLike({ likes, image_id, className }) {
             user_id: user_id,
           });
         } else {
-          const likeToDelete = likes.find(
-            (like) => like.user_id === user_id || like?.user?.id === user_id
+          const likeToDelete = likes.find((like) =>
+            like.user ? like.user.id === user_id : like.user_id === user_id
           );
           if (likeToDelete) {
-            await dislike(likeToDelete.id);
+            await dislike({
+              id: likeToDelete.id,
+              image_id,
+            });
           }
         }
       } catch (error) {
-        console.log(error);
+        if (error.response) {
+          toast({
+            variant: "destructive",
+            title: `${error.response?.data?.message || "Like content failed"}`,
+          });
+        }
       }
     } else {
       signIn();
@@ -61,7 +78,7 @@ export default function ButtonLike({ likes, image_id, className }) {
   return (
     <div
       className={cn(
-        `flex flex-col gap-1 text-center text-xs [&_svg]:h-5 [&_svg]:w-5 lg:[&_svg]:h-6 lg:[&_svg]:w-6 cursor-pointer`,
+        `flex flex-col gap-1 items-center cursor-pointer`,
         className
       )}
       onClick={() => handleCreateLike()}
@@ -69,9 +86,9 @@ export default function ButtonLike({ likes, image_id, className }) {
       {isUserLikedImage ? (
         <Heart className="text-primary fill-primary" />
       ) : (
-        <Heart className="text-white hover:fill-primary hover:text-primary duration-100 transition-all ease-in-out" />
+        <Heart className="hover:fill-primary hover:text-primary duration-100 transition-all ease-in-out" />
       )}
-      <p className="text-primary-foreground hidden sm:block">{lengthLikes}</p>
+      {withLikeLength && <p>{formatNumber(lengthLikes)}</p>}
     </div>
   );
 }

@@ -3,22 +3,22 @@ import AlbumsByUser from "./tabs/AlbumsByUser";
 import LikesByUser from "./tabs/LikesByUser";
 import PostsByUser from "./tabs/PostsByUser";
 
-export default function TabsProfile() {
+export default function TabsProfile({ userId }) {
   const TAB_LIST = [
     {
       title: "Posts",
       value: "post",
-      content: <PostsByUser />,
+      content: <PostsByUser userId={userId} />,
     },
     {
       title: "Your Album",
       value: "yourAlbum",
-      content: <AlbumsByUser />,
+      content: <AlbumsByUser userId={userId} />,
     },
     {
       title: "Likes",
       value: "likes",
-      content: <LikesByUser />,
+      content: <LikesByUser userId={userId} />,
     },
   ];
   return (

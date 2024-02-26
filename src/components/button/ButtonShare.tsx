@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
-import { Share } from "lucide-react";
-import DrawerDialogShare from "../drawer/DrawerShareContent";
+import { Share, Share2 } from "lucide-react";
+import DrawerDialogShare from "../drawer/DrawerDialogShare";
 import { useState } from "react";
 
 export default function ButtonShare({ className }) {
@@ -16,12 +16,12 @@ export default function ButtonShare({ className }) {
       <div
         onClick={() => setDrawerShare(true)}
         className={cn(
-          `flex flex-col gap-1 items-center text-[8px] [&_svg]:h-5 [&_svg]:w-5 cursor-pointer`,
+          `flex flex-col gap-1 items-center cursor-pointer`,
           className
         )}
       >
-        <Share />
-        <p className="text-primary-foreground">Share</p>
+        <Share2 />
+        <p className="text-foreground">Share</p>
       </div>
     </>
   );

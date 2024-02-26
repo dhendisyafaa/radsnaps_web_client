@@ -14,7 +14,9 @@ export default function HeroSection() {
       </div>
       <p className="font-semibold font-source-serif text-5xl md:text-7xl text-center mb-10">
         Framing the world&apos;s wonders in{" "}
-        <span className="text-primary">every snap</span>
+        <span className="bg-gradient-to-br from-purple-950 via-purple-600 to-purple-950 bg-clip-text text-transparent">
+          every snap
+        </span>
       </p>
       <SeachBarComponent className="max-w-lg" endpoint={"image"} />
     </div>

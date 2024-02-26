@@ -21,6 +21,8 @@ import { useState } from "react";
 import LoadingThreeDoots from "../common/loader/LoadingThreeDoots";
 import FormCreateAlbum from "../form/FormCreateAlbum";
 import { Button } from "../ui/button";
+import { useToast } from "../ui/use-toast";
+import EmptyStateComponent from "../common/EmptyStateComponent";
 
 export default function ButtonSaveToAlbum({
   className,
@@ -39,6 +41,7 @@ export default function ButtonSaveToAlbum({
     useImageToAlbum();
   const { mutateAsync: deleteImageInAlbum, isPending: deletingImage } =
     useDeleteImageInAlbum();
+  const { toast } = useToast();
 
   if (isLoading) return <p>load...</p>;
   if (isError) return <p>error: {error}</p>;
@@ -51,10 +54,16 @@ export default function ButtonSaveToAlbum({
         album_id,
         image_id,
       };
-
       await addImageToAlbum(data);
     } catch (error) {
-      console.log("error", error);
+      if (error.response) {
+        toast({
+          variant: "destructive",
+          title: `${
+            error.response?.data?.message || "Failed to add image in album"
+          }`,
+        });
+      }
     }
   };
 
@@ -65,8 +74,14 @@ export default function ButtonSaveToAlbum({
         image_id,
       });
     } catch (error) {
-      // FIX add toast for if delete image in album failed
-      console.log("error", error);
+      if (error.response) {
+        toast({
+          variant: "destructive",
+          title: `${
+            error.response?.data?.message || "Failed to delete image in album"
+          }`,
+        });
+      }
     }
   };
 
@@ -78,7 +93,7 @@ export default function ButtonSaveToAlbum({
     <div>
       <div
         className={cn(
-          `flex flex-col gap-1 text-center items-center text-xs [&_svg]:h-5 [&_svg]:w-5 lg:[&_svg]:h-6 lg:[&_svg]:w-6 cursor-pointer`,
+          `flex flex-col gap-1 items-center cursor-pointer`,
           className
         )}
         onClick={() =>
@@ -88,13 +103,13 @@ export default function ButtonSaveToAlbum({
         {imageIsSaved.includes(true) ? (
           <Bookmark className="text-primary fill-primary" />
         ) : (
-          <Bookmark className="text-white hover:fill-primary hover:text-primary duration-100 transition-all ease-in-out" />
+          <Bookmark className="hover:fill-primary hover:text-primary duration-100 transition-all ease-in-out" />
         )}
         {withLabel ? (
           imageIsSaved.includes(true) ? (
-            <p className="text-primary-foreground">Saved</p>
+            <p>Saved</p>
           ) : (
-            <p className="text-primary-foreground">Save</p>
+            <p>Save</p>
           )
         ) : null}
       </div>
@@ -107,60 +122,71 @@ export default function ButtonSaveToAlbum({
             </DialogTitle>
           </DialogHeader>
           <div className="h-full flex flex-col gap-2 max-h-[50vh] overflow-y-auto my-6">
-            {albums.length !== 0
-              ? albums.map((album) => {
-                  const isSaved = album?.images.some(
-                    (image) => image.image_id === image_id
-                  );
-                  return (
-                    <div
-                      key={album.id}
-                      className={cn(
-                        "rounded-lg border bg-card text-card-foreground shadow-sm p-1 flex items-center justify-between cursor-pointer select-none group hover:border-primary duration-300",
-                        isSaved && "border-primary"
-                      )}
-                      onClick={() =>
-                        !isSaved
-                          ? handleAddImageToAlbum(album.id)
-                          : handleDeleteImageInAlbum(album.id)
-                      }
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="relative h-16 w-16 rounded-md overflow-hidden">
-                          <Image
-                            src={
-                              album.album_cover ||
-                              "https://images.unsplash.com/photo-1514539079130-25950c84af65?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            }
-                            alt={`album ${album.id} cover`}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <p
-                            className={cn(
-                              "text-sm font-semibold leading-none tracking-tight",
-                              isSaved && "text-primary"
-                            )}
-                          >
-                            {album.album_name}
-                          </p>
-                          <p className="text-xs text-muted-foreground">{`${album.images.length} images`}</p>
-                          <p className="text-[11px] text-muted-foreground">
-                            {relativeTimeSuffix(album.updated_at)}
-                          </p>
-                        </div>
+            {albums.length !== 0 ? (
+              albums.map((album) => {
+                const isSaved = album?.images.some(
+                  (image) => image.image_id === image_id
+                );
+                return (
+                  <div
+                    key={album.id}
+                    className={cn(
+                      "rounded-lg border bg-card text-card-foreground shadow-sm p-1 flex items-center justify-between cursor-pointer select-none group hover:border-primary duration-300",
+                      isSaved && "border-primary"
+                    )}
+                    onClick={() =>
+                      !isSaved
+                        ? handleAddImageToAlbum(album.id)
+                        : handleDeleteImageInAlbum(album.id)
+                    }
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="relative h-16 w-16 rounded-md overflow-hidden">
+                        <Image
+                          src={
+                            album.album_cover ||
+                            "https://images.unsplash.com/photo-1514539079130-25950c84af65?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                          }
+                          alt={`album ${album.id} cover`}
+                          fill
+                          className="object-cover"
+                        />
                       </div>
-                      {isSaved ? (
-                        <Button variant={"ghost"} size={"icon"}>
-                          <Check />
-                        </Button>
-                      ) : null}
+                      <div className="space-y-1">
+                        <p
+                          className={cn(
+                            "text-sm font-semibold leading-none tracking-tight",
+                            isSaved && "text-primary"
+                          )}
+                        >
+                          {album.album_name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">{`${album.images.length} images`}</p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {relativeTimeSuffix(album.updated_at)}
+                        </p>
+                      </div>
                     </div>
-                  );
-                })
-              : "empty state album user"}
+                    {isSaved ? (
+                      <Button variant={"ghost"} size={"icon"}>
+                        <Check />
+                      </Button>
+                    ) : null}
+                  </div>
+                );
+              })
+            ) : (
+              <EmptyStateComponent
+                illustration={"/assets/svg/empty-album.svg"}
+                titleMessage={"No albums have been created yet"}
+                descriptionMessage={
+                  "Create an album and photos can be put in it"
+                }
+                width={100}
+                height={100}
+                withButton={false}
+              />
+            )}
           </div>
           <div className="flex justify-between items-center">
             <FormCreateAlbum />

@@ -1,18 +1,17 @@
 import { useAlbumsByUser } from "@/app/api/resolver/albumResolver";
 import AlbumGridView from "@/components/album/AlbumGridView";
-import { useUserData } from "@/hooks/useUserData";
+import EmptyStateComponent from "@/components/common/EmptyStateComponent";
+import SkeletonGallery from "@/components/common/skeleton/SkeletonGallery";
 
-export default function AlbumsByUser() {
-  const { user_id } = useUserData();
-
+export default function AlbumsByUser({ userId }) {
   const {
     data: albumsUser,
     isLoading,
     isError,
     error,
-  } = useAlbumsByUser({ user_id });
+  } = useAlbumsByUser({ user_id: userId });
 
-  if (isLoading) return <p>load...</p>;
+  if (isLoading) return <SkeletonGallery withHeader={false} />;
   if (isError) return <p>error: {error}</p>;
 
   const albums = albumsUser.data.data;
@@ -25,7 +24,12 @@ export default function AlbumsByUser() {
           className={"grid grid-cols-2 gap-3"}
         />
       ) : (
-        "empty state posts"
+        <EmptyStateComponent
+          illustration={"/assets/svg/empty-album.svg"}
+          titleMessage={"No albums have been created yet"}
+          descriptionMessage={"Create an album and photos can be put in it"}
+          withButton={false}
+        />
       )}
     </div>
   );

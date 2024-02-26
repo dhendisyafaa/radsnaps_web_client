@@ -6,6 +6,7 @@ import SkeletonDetailAlbum from "@/components/common/skeleton/SkeletonDetailAlbu
 import AlertDeleteAlbum from "@/components/dialog/AlertDeleteAlbum";
 import FormEditAlbum from "@/components/form/FormEditAlbum";
 import NavbarComponent from "@/components/homepage/NavbarComponent";
+import AvatarUserComponent from "@/components/profile/AvatarUserComponent";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -78,10 +79,11 @@ export default function DetailAlbumPage({ params }) {
             <div onClick={() => {}}>
               <p className="font-semibold text-sm mb-2">Created by</p>
               <div className="flex gap-2 items-center">
-                <Avatar className="w-8 h-8">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
+                <AvatarUserComponent
+                  imageUrl={album.owner.avatar}
+                  withUsername={false}
+                  username={album.owner.username}
+                />
                 <p>{album.owner.username}</p>
               </div>
             </div>
@@ -113,7 +115,7 @@ export default function DetailAlbumPage({ params }) {
           </div>
         </div>
       </div>
-      <ImagesAlbum album_id={params.id} />
+      <ImagesAlbum albumId={params.id} />
     </NavbarComponent>
   );
 }

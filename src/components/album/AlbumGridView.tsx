@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { AspectRatio } from "../ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useState } from "react";
+import AvatarUserComponent from "../profile/AvatarUserComponent";
 
 export default function AlbumGridView({
   className,
@@ -46,10 +47,12 @@ export default function AlbumGridView({
             {withDetail && (
               <div className="flex text-xs items-center gap-1">
                 <div className="flex gap-1 items-center">
-                  <Avatar className="w-5 h-5">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
+                  <AvatarUserComponent
+                    imageUrl={album.owner.avatar}
+                    className="w-5 h-5"
+                    withUsername={false}
+                    username={album.owner.username}
+                  />
                   <p>{album.owner.username}</p>
                 </div>
                 • <p>{album.images.length} images</p>

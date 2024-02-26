@@ -1,5 +1,6 @@
 "use client";
 import { useAllReportIssues } from "@/app/api/resolver/reportIssueResolver";
+import EmptyStateComponent from "@/components/common/EmptyStateComponent";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -168,22 +169,22 @@ export default function ReportContentPage() {
   return (
     <div>
       {!isLoading ? (
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          {reports.length !== 0 ? (
+        reports.length !== 0 ? (
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
             <TableBody>
               {table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
@@ -198,10 +199,15 @@ export default function ReportContentPage() {
                 </TableRow>
               ))}
             </TableBody>
-          ) : (
-            "empty state reports"
-          )}
-        </Table>
+          </Table>
+        ) : (
+          <EmptyStateComponent
+            illustration={"/assets/svg/empty-report.svg"}
+            titleMessage={"No content reported yet"}
+            descriptionMessage={"User hasn't reported anything yet"}
+            withButton={false}
+          />
+        )
       ) : (
         <p>load..</p>
       )}

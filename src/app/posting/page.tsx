@@ -25,6 +25,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Replace } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import prettyBytes from "pretty-bytes";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -247,7 +248,7 @@ export default function PostingNewImage() {
                 </CardHeader>
                 <CardContent className="text-sm text-foreground">
                   <p>Filename: {selectedFile.name}</p>
-                  <p>Size: {selectedFile.size}</p>
+                  <p>Size: {prettyBytes(selectedFile.size)}</p>
                   <p>Type: {selectedFile.type}</p>
                 </CardContent>
               </Card>

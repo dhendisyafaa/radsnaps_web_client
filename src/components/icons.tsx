@@ -15,6 +15,7 @@ import {
   Image,
   Laptop,
   LayoutDashboardIcon,
+  LineChart,
   Loader2,
   LogIn,
   LucideProps,
@@ -64,6 +65,7 @@ export const Icons = {
       />
     </svg>
   ),
+  lineChart: LineChart,
   settings: Settings,
   logo: Command,
   login: LogIn,

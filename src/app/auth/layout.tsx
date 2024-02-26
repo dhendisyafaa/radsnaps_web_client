@@ -14,7 +14,7 @@ export default function LayoutAuth({ children }) {
         />
       </div>
       <div className="container grid place-items-center overflow-y-auto">
-        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px] py-12">
+        <div className="mx-auto flex w-full flex-col justify-center space-y-8 sm:w-[350px] py-12">
           {children}
           <p className="px-8 text-center text-sm text-muted-foreground">
             By clicking continue, you agree to our{" "}

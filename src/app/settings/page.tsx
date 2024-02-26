@@ -1,19 +1,8 @@
 "use client";
 
-import FormEditProfileUser from "@/components/form/formEditProfileUser";
+import FormEditProfileUser from "@/components/form/FormEditProfile";
 import { useUserData } from "@/hooks/useUserData";
 import { useUserByUsername } from "../api/resolver/userResolver";
-
-const defaultValues: Partial<ProfileFormValues> = {
-  username: "",
-  fullname: "",
-  email: "",
-  bio: "I own a computer.",
-  urls: [
-    { value: "https://shadcn.com" },
-    { value: "http://twitter.com/shadcn" },
-  ],
-};
 
 export default function ProfileForm() {
   const { username } = useUserData();

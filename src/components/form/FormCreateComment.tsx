@@ -32,7 +32,7 @@ export default function FormCreateComment({ image_id }) {
   const { user_id, status } = useUserData();
 
   const formSchema = z.object({
-    comment_content: z.string().min(2).max(50),
+    comment_content: z.string().min(2).max(100),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
