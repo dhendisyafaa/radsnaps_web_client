@@ -14,7 +14,7 @@ export default function AvatarUserComponent({
 
   return (
     <div
-      className="flex gap-2 items-center border"
+      className="flex gap-2 items-center"
       onClick={() => push(`/profile/${username}`)}
     >
       <Avatar className={cn(className)}>
