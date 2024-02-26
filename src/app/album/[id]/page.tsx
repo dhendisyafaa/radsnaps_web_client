@@ -115,7 +115,7 @@ export default function DetailAlbumPage({ params }) {
           </div>
         </div>
       </div>
-      <ImagesAlbum album_id={params.id} />
+      <ImagesAlbum albumId={params.id} />
     </NavbarComponent>
   );
 }
