@@ -1,10 +1,11 @@
 "use client";
 import { useUserAnalythics } from "@/app/api/resolver/dashboardResolver";
+import SkeletonAnalythic from "@/components/common/skeleton/SkeletonAnalythic";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 export default function UserAnalythics() {
   const { data: userAnalythicData, isLoading } = useUserAnalythics();
-  if (isLoading) return <p>load...</p>;
+  if (isLoading) return <SkeletonAnalythic />;
 
   const data = userAnalythicData.data.data;
   return (
