@@ -1,5 +1,5 @@
-import React from "react";
 import AlbumGridView from "../album/AlbumGridView";
+import EmptyStateComponent from "../common/EmptyStateComponent";
 
 export default function AlbumContentSearch({ albums }) {
   return albums.length !== 0 ? (
@@ -10,6 +10,11 @@ export default function AlbumContentSearch({ albums }) {
       }
     />
   ) : (
-    "empty state albums"
+    <EmptyStateComponent
+      illustration={"/assets/svg/empty-album.svg"}
+      titleMessage={"No albums have been created yet"}
+      descriptionMessage={"Create an album and photos can be put in it"}
+      withButton={false}
+    />
   );
 }

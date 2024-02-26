@@ -1,5 +1,8 @@
 import { useImagesByUser } from "@/app/api/resolver/imageResolver";
+import EmptyStateComponent from "@/components/common/EmptyStateComponent";
+import SkeletonGallery from "@/components/common/skeleton/SkeletonGallery";
 import GalleryGridView from "@/components/gallery/GalleryGridView";
+import { useRouter } from "next/navigation";
 
 export default function PostsByUser({ userId }) {
   const {
@@ -10,7 +13,9 @@ export default function PostsByUser({ userId }) {
   } = useImagesByUser({
     user_id: userId,
   });
-  if (isLoading) return <p>load...</p>;
+  const { push } = useRouter();
+
+  if (isLoading) return <SkeletonGallery withHeader={false} />;
   if (isError) return <p>error: {error}</p>;
 
   const images = imagesUser.data.data;
@@ -24,7 +29,12 @@ export default function PostsByUser({ userId }) {
           className={"columns-3 gap-3 space-y-3"}
         />
       ) : (
-        "empty state posts"
+        <EmptyStateComponent
+          illustration={"/assets/svg/empty-image.svg"}
+          titleMessage={"No uploaded image yet"}
+          descriptionMessage={"Please upload your memorable image"}
+          withButton={false}
+        />
       )}
     </div>
   );

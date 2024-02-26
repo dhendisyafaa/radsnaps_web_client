@@ -1,5 +1,6 @@
 import React from "react";
 import GalleryGridView from "../gallery/GalleryGridView";
+import EmptyStateComponent from "../common/EmptyStateComponent";
 
 export default function ImageContentSearch({ images }) {
   return images != 0 ? (
@@ -10,6 +11,11 @@ export default function ImageContentSearch({ images }) {
       }
     />
   ) : (
-    "empty state when search empty"
+    <EmptyStateComponent
+      illustration={"/assets/svg/empty-search.svg"}
+      titleMessage={"No search result you requested"}
+      descriptionMessage={"Please search using other keywords"}
+      withButton={false}
+    />
   );
 }

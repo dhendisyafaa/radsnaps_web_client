@@ -1,6 +1,7 @@
 import { useAllAlbum } from "@/app/api/resolver/albumResolver";
-import AlbumGridView from "./AlbumGridView";
+import EmptyStateComponent from "../common/EmptyStateComponent";
 import SkeletonAlbum from "../common/skeleton/SkeletonAlbum";
+import AlbumGridView from "./AlbumGridView";
 
 export default function UserAlbums() {
   const { data: dataAlbums, isLoading } = useAllAlbum();
@@ -15,6 +16,11 @@ export default function UserAlbums() {
       }
     />
   ) : (
-    "empty state albums"
+    <EmptyStateComponent
+      illustration={"/assets/svg/empty-album.svg"}
+      titleMessage={"No albums have been created yet"}
+      descriptionMessage={"Create an album and photos can be put in it"}
+      withButton={false}
+    />
   );
 }
