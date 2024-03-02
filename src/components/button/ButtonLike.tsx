@@ -7,7 +7,7 @@ import {
 import { useUserData } from "@/hooks/useUserData";
 import { cn } from "@/lib/utils";
 import { formatNumber } from "@/utils/formatNumber";
-import { Heart } from "lucide-react";
+import { Heart, HeartCrack, HeartPulse } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useToast } from "../ui/use-toast";
 
@@ -34,6 +34,7 @@ export default function ButtonLike({
   const isUserLikedImage = isUserLiked();
 
   const handleCreateLike = async () => {
+    if (loadCreateLike || loadDislike) return null;
     if (status === "authenticated") {
       try {
         if (!isUserLikedImage) {
@@ -83,11 +84,16 @@ export default function ButtonLike({
       )}
       onClick={() => handleCreateLike()}
     >
-      {isUserLikedImage ? (
+      {loadCreateLike ? (
+        <HeartPulse className="text-primary" />
+      ) : loadDislike ? (
+        <HeartCrack />
+      ) : isUserLikedImage ? (
         <Heart className="text-primary fill-primary" />
       ) : (
         <Heart className="hover:fill-primary hover:text-primary duration-100 transition-all ease-in-out" />
       )}
+
       {withLikeLength && <p>{formatNumber(lengthLikes)}</p>}
     </div>
   );
