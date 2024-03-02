@@ -36,8 +36,6 @@ export default function ReportContentPage() {
   const reports = reportIssues?.data?.data;
   const queryClient = useQueryClient();
 
-  //  FIX THIS SECTION TO SEPARATE COMPONENT, REMOVE OPT CHAINING ABOVE, TRY AGAIN FOR FOR CHECK BUILD
-
   const columns = [
     {
       header: ({ column }) => {
