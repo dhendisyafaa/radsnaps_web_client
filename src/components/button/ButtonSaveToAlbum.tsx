@@ -18,11 +18,12 @@ import { Bookmark, Check } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
+import EmptyStateComponent from "../common/EmptyStateComponent";
 import LoadingThreeDoots from "../common/loader/LoadingThreeDoots";
 import FormCreateAlbum from "../form/FormCreateAlbum";
 import { Button } from "../ui/button";
+import { Skeleton } from "../ui/skeleton";
 import { useToast } from "../ui/use-toast";
-import EmptyStateComponent from "../common/EmptyStateComponent";
 
 export default function ButtonSaveToAlbum({
   className,
@@ -43,7 +44,7 @@ export default function ButtonSaveToAlbum({
     useDeleteImageInAlbum();
   const { toast } = useToast();
 
-  if (isLoading) return <p>load...</p>;
+  if (isLoading) return <Skeleton className="w-6 h-6 rounded-full" />;
   if (isError) return <p>error: {error}</p>;
 
   const albums = albumsUser.data.data;
