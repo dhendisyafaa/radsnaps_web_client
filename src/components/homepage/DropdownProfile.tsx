@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Skeleton } from "../ui/skeleton";
+import AvatarUserComponent from "../profile/AvatarUserComponent";
 
 export default function DropdownProfile() {
   const { username, email, user_id } = useUserData();
@@ -32,12 +33,7 @@ export default function DropdownProfile() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={avatar.avatar} alt={`avatar user ${username}`} />
-            <AvatarFallback className="uppercase">
-              {firstLetterUsername}
-            </AvatarFallback>
-          </Avatar>
+          <AvatarUserComponent withUsername={false} imageUrl={avatar.avatar} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
