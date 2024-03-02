@@ -1,6 +1,7 @@
 import { useDetailImage } from "@/app/api/resolver/imageResolver";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import ImageZoom from "react-image-zooom";
 import ButtonLike from "../button/ButtonLike";
 import ButtonReportIssue from "../button/ButtonReportIssue";
 import ButtonSaveToAlbum from "../button/ButtonSaveToAlbum";
@@ -10,8 +11,6 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { DrawerContent } from "../ui/drawer";
 import CommentSection from "./CommentSection";
-import { cn } from "@/lib/utils";
-import { useState } from "react";
 
 export default function DetailImage({ imageId }) {
   const [imageLoading, setImageLoading] = useState(true);
@@ -23,21 +22,13 @@ export default function DetailImage({ imageId }) {
 
   return (
     <DrawerContent className="h-[95vh]">
-      <div className="p-4 md:p-16 gap-5 grid grid-cols-1 md:grid-cols-2 overflow-y-auto">
+      <div className="h-full p-4 md:p-16 gap-5 grid grid-cols-1 md:grid-cols-2 overflow-y-auto">
         <div>
-          <Image
+          <ImageZoom
+            className="rounded-lg"
             src={detailImage.image_url}
             alt={`image ${detailImage.image_name} from owner ${detailImage.owner.username}`}
-            priority
-            width={detailImage.width}
-            height={detailImage.height}
-            onLoad={() => setImageLoading(false)}
-            className={cn(
-              "w-full rounded-lg object-cover object-center cursor-pointer",
-              imageLoading
-                ? "grayscale blur-2xl scale-110"
-                : "grayscale-0 blur-0 scale-100"
-            )}
+            zoom="200"
           />
           <div className="flex flex-wrap gap-2 w-full mt-3">
             {detailImage?.tags.map((tag, index) => (

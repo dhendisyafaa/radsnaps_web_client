@@ -51,5 +51,13 @@ export const useUpdateAvatarUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => updateAvatarUser(axiosAuth, data.id, data.data_image),
+    onSuccess: async (data, variables, context) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["avatar", `${variables.id}`],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["user", `${variables.username}`],
+      });
+    },
   });
 };

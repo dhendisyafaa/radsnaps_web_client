@@ -17,5 +17,5 @@ export const updateProfileUser = (auth, id, data) => {
 };
 
 export const updateAvatarUser = (auth, id, data) => {
-  return axios.patch(`/user/avatar/${id}`, data);
+  return auth.patch(`/user/avatar/${id}`, data);
 };

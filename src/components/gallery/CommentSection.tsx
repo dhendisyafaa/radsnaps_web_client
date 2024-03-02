@@ -1,11 +1,10 @@
 "use client";
 import FormCreateComment from "../form/FormCreateComment";
-
 import { useCommentByImage } from "@/app/api/resolver/commentResolver";
 import { useAvatarUser } from "@/app/api/resolver/userResolver";
 import { useUserData } from "@/hooks/useUserData";
+import LoadingThreeDoots from "../common/loader/LoadingThreeDoots";
 import AvatarUserComponent from "../profile/AvatarUserComponent";
-import { Skeleton } from "../ui/skeleton";
 import CommentUserComponent from "./CommentUserComponent";
 
 export default function CommentSection({ imageId }) {
@@ -15,7 +14,11 @@ export default function CommentSection({ imageId }) {
   const { data: avatarUser, isLoading: loadAvatar } = useAvatarUser(user_id);
 
   if (loadAvatar || loadComments || status === "loading")
-    return <Skeleton className="w-8 h-8 rounded-full" />;
+    return (
+      <div className="flex justify-center">
+        <LoadingThreeDoots />
+      </div>
+    );
 
   const comments = commentsData.data.data;
   const avatar = avatarUser.data.data;

@@ -23,7 +23,7 @@ export default function CommentUserComponent({ comments, avatar, username }) {
       {variables[0] && (
         <div className="flex items-start gap-2 p-4 w-full opacity-50">
           <AvatarUserComponent
-            imageUrl={avatar}
+            imageUrl={avatar.avatar}
             username={username}
             withUsername={false}
           />

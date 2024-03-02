@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   flexRender,
   getCoreRowModel,
@@ -21,6 +22,7 @@ import {
 import {
   ArrowUpDown,
   MessageCircleOff,
+  RefreshCcw,
   TimerReset,
   TrashIcon,
 } from "lucide-react";
@@ -32,6 +34,9 @@ export default function ReportContentPage() {
   const { push } = useRouter();
   const { data: reportIssues, isLoading } = useAllReportIssues();
   const reports = reportIssues?.data?.data;
+  const queryClient = useQueryClient();
+
+  //  FIX THIS SECTION TO SEPARATE COMPONENT, REMOVE OPT CHAINING ABOVE, TRY AGAIN FOR FOR CHECK BUILD
 
   const columns = [
     {
@@ -129,7 +134,7 @@ export default function ReportContentPage() {
         if (status === "pending") {
           return (
             <Button
-              size={"default"}
+              size={"sm"}
               onClick={() =>
                 push(
                   `/dashboard/report-content/response/${idReport}/${contentType}/${contentId}`
@@ -142,7 +147,7 @@ export default function ReportContentPage() {
         } else if (status === "closed" || status === "deleted") {
           return (
             <Button
-              size={"default"}
+              size={"sm"}
               variant={"outline"}
               onClick={() => push(`/report/${idReport}`)}
             >
@@ -170,36 +175,49 @@ export default function ReportContentPage() {
     <div>
       {!isLoading ? (
         reports.length !== 0 ? (
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="font-medium">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <>
+            <Button
+              variant={"ghost"}
+              size={"sm"}
+              className="[&_svg]:w-5 [&_svg]:h-5 my-2 flex gap-1 items-center"
+              onClick={() =>
+                queryClient.invalidateQueries({ queryKey: ["reports"] })
+              }
+            >
+              <RefreshCcw />
+              Refresh
+            </Button>
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id}>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="font-medium">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </>
         ) : (
           <EmptyStateComponent
             illustration={"/assets/svg/empty-report.svg"}

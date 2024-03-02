@@ -9,10 +9,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { useUserData } from "@/hooks/useUserData";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function OfficialContent() {
+  const { user_id } = useUserData();
   const { push } = useRouter();
   return (
     <Accordion type="multiple">
@@ -46,7 +48,7 @@ export default function OfficialContent() {
           </Button>
         </div>
         <AccordionContent>
-          <PostsByUser />
+          <PostsByUser userId={user_id} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>

@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "next/navigation";
 import { useContentReported } from "@/app/api/resolver/contentResolver";
 import { cn } from "@/lib/utils";
+import AvatarUserComponent from "../profile/AvatarUserComponent";
 
 export default function ContentReportIssue({ content_type, content_id }) {
   const { push, back } = useRouter();
@@ -54,18 +55,16 @@ export const ContentReportImage = ({ content }) => {
           )}
         />
       </div>
-      <div className="w-full">
+      <div className="w-full space-y-1">
         <p className="text-sm md:text-lg font-semibold">
           {content.image_title}
         </p>
         <p className="text-xs md:text-sm">{content.image_description}</p>
-        <div className="flex gap-2 items-center text-xs md:text-sm mt-3">
-          <Avatar className="w-6 h-6">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <p>{content.owner.username}</p>
-        </div>
+        <AvatarUserComponent
+          className="w-6 h-6 text-xs md:text-sm"
+          imageUrl={content.owner.avatar}
+          username={content.owner.username}
+        />
       </div>
     </div>
   );

@@ -17,9 +17,12 @@ export const useCreateResponseReport = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => generateResponseReport(axiosAuth, data),
-    onSuccess(data, variables, context) {
-      queryClient.invalidateQueries({
+    onSuccess: async (data, variables, context) => {
+      await queryClient.invalidateQueries({
         queryKey: ["reports"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["images"],
       });
     },
   });

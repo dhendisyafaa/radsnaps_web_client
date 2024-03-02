@@ -105,7 +105,7 @@ export default function GalleryPage() {
         </div>
         <SeachBarComponent endpoint={"image"} />
       </div>
-      {!images.length != 0 ? (
+      {images.length != 0 ? (
         <GalleryGridView
           images={images}
           className={
