@@ -34,7 +34,7 @@ export default function UserRegisterForm() {
     fullname: z.string().min(2, {
       message: "Fullname is required",
     }),
-    username: z.string().min(2, {
+    username: z.string().toLowerCase().min(2, {
       message: "Username is required",
     }),
     email: z
