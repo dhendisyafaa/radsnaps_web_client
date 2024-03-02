@@ -93,7 +93,7 @@ export default function ProfilePage({ params }) {
               @{user.username}
             </p>
           </div>
-          {/* <Dialog>
+          <Dialog>
             <DialogTrigger className="relative overflow-hidden">
               <div className="text-primary-foreground absolute bottom-1 right-1 w-6 h-6 bg-primary rounded-full z-20 grid place-items-center [&_svg]:w-3">
                 <Pencil />
@@ -115,13 +115,7 @@ export default function ProfilePage({ params }) {
                 username={user.username}
               />
             </DialogContent>
-          </Dialog> */}
-          <AvatarUserComponent
-            imageUrl={user.avatar}
-            withUsername={false}
-            username={user.username}
-            className="w-16 h-16 md:w-20 md:h-20 text-2xl md:text-4xl"
-          />
+          </Dialog>
         </div>
         <p className="text-sm text-foreground tracking-wide">{user?.bio}</p>
         <div className="max-w-fit">
