@@ -6,7 +6,7 @@ interface CardDashboardProps {
   className?: string;
   icon?: React.ReactElement;
   titleCard?: string;
-  content?: string;
+  content?: React.ReactElement;
 }
 
 const CardDashboard: React.FC<CardDashboardProps> = ({

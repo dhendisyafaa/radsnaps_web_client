@@ -28,10 +28,5 @@ export const useCreateReportIssue = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => generateReportIssue(axiosAuth, data),
-    // onSettled: (data, variables, context) => {
-    //   queryClient.invalidateQueries({
-    //     queryKey: ["comment", context.image_id],
-    //   });
-    // },
   });
 };
