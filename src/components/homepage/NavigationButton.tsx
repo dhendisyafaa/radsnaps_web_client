@@ -58,7 +58,7 @@ export default function NavigationButton() {
         <Link href="/posting">
           <div
             className={cn(
-              "bg-gradient-to-b from-gray-900 via-purple-900 to-violet-600 rounded-full font-semibold p-3",
+              "bg-primary rounded-full font-semibold p-3",
               currUrl === "/posting"
                 ? "bg-primary text-white"
                 : "bg-background text-foreground"

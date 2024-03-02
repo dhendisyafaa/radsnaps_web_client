@@ -1,15 +1,18 @@
 "use client";
 import { useReportById } from "@/app/api/resolver/reportIssueResolver";
+import LoadingThreeDoots from "@/components/common/loader/LoadingThreeDoots";
 import ContentReportIssue from "@/components/report/ContentReportIssue";
 import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { relativeTimeSuffix } from "@/utils/relativeTime";
-import React from "react";
 
 export default function DetailReportIssue({ params }) {
   const { data: detailReport, isLoading } = useReportById(params.id);
-  if (isLoading) return <p>load...</p>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center">
+        <LoadingThreeDoots />
+      </div>
+    );
 
   const report = detailReport.data.data;
 

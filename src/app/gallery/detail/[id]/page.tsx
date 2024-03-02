@@ -1,6 +1,6 @@
 "use client";
-import DetailImage from "@/components/gallery/DetailImage";
-import { Drawer } from "@/components/ui/drawer";
+import DetailImageComponent from "@/components/gallery/DetailImageComponent";
+import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -10,7 +10,9 @@ export default function DetailImagePage({ params }) {
 
   return (
     <Drawer open={open} onClose={() => back()}>
-      <DetailImage imageId={params.id} />
+      <DrawerContent className="h-[95vh]">
+        <DetailImageComponent imageId={params.id} />
+      </DrawerContent>
     </Drawer>
   );
 }

@@ -5,6 +5,7 @@ import {
   useCreateResponseReport,
   useReportById,
 } from "@/app/api/resolver/responseReportResolver";
+import LoadingThreeDoots from "@/components/common/loader/LoadingThreeDoots";
 import ContentReportIssue from "@/components/report/ContentReportIssue";
 import {
   AlertDialog,
@@ -44,7 +45,12 @@ export default function CreateResponseReport({ params }) {
   const [responseMessage, setResponseMessage] = useState("");
   const { user_id } = useUserData();
 
-  if (isLoading) return <p>load...</p>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center">
+        <LoadingThreeDoots />
+      </div>
+    );
 
   const report = reportData?.data?.data;
 

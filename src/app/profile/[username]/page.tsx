@@ -31,6 +31,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../components/ui/dialog";
+import LoadingThreeDoots from "@/components/common/loader/LoadingThreeDoots";
 
 export default function ProfilePage({ params }) {
   const { username } = useUserData();
@@ -44,7 +45,12 @@ export default function ProfilePage({ params }) {
     error,
   } = useUserByUsername(params.username);
 
-  if (isLoading) return <p>load...</p>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center">
+        <LoadingThreeDoots />
+      </div>
+    );
   if (isError) return <p>error: {error}</p>;
 
   const user = userData.data.data;

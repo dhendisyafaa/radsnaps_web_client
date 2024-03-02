@@ -11,8 +11,12 @@ import { MoreVertical } from "lucide-react";
 import ButtonReportIssue from "../button/ButtonReportIssue";
 import AvatarUserComponent from "../profile/AvatarUserComponent";
 import { ScrollArea } from "../ui/scroll-area";
+import { useAvatarUser } from "@/app/api/resolver/userResolver";
+import SkeletonComment from "../common/skeleton/SkeletonComment";
+import LoadingThreeDoots from "../common/loader/LoadingThreeDoots";
+import { Skeleton } from "../ui/skeleton";
 
-export default function CommentUserComponent({ comments, avatar, username }) {
+export default function CommentUserComponent({ comments, username }) {
   const variables = useMutationState<string>({
     filters: { mutationKey: ["addComment"], status: "pending" },
     select: (mutation) => mutation.state.variables,
@@ -22,11 +26,7 @@ export default function CommentUserComponent({ comments, avatar, username }) {
     <ScrollArea className="my-3 h-[50vh]">
       {variables[0] && (
         <div className="flex items-start gap-2 p-4 w-full opacity-50">
-          <AvatarUserComponent
-            imageUrl={avatar.avatar}
-            username={username}
-            withUsername={false}
-          />
+          <Skeleton className="w-6 h-6 rounded-full" />
           <div>
             <div className="flex gap-2 items-center">
               <p className="text-lg font-semibold leading-none tracking-tight">

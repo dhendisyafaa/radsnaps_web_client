@@ -1,11 +1,11 @@
 "use client";
-import Image from "next/image";
-import React, { useEffect } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { useRouter } from "next/navigation";
 import { useContentReported } from "@/app/api/resolver/contentResolver";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import LoadingThreeDoots from "../common/loader/LoadingThreeDoots";
 import AvatarUserComponent from "../profile/AvatarUserComponent";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export default function ContentReportIssue({ content_type, content_id }) {
   const { push, back } = useRouter();
@@ -14,7 +14,12 @@ export default function ContentReportIssue({ content_type, content_id }) {
     id: content_id,
   });
 
-  if (isLoading) return <p>load...</p>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center">
+        <LoadingThreeDoots />
+      </div>
+    );
 
   if (contentReported === undefined)
     return (
