@@ -1,6 +1,7 @@
 import { useImageByAlbum } from "@/app/api/resolver/imageResolver";
 import SkeletonAlbum from "../common/skeleton/SkeletonAlbum";
 import GalleryGridView from "../gallery/GalleryGridView";
+import EmptyStateComponent from "../common/EmptyStateComponent";
 
 export default function ImagesAlbum({ albumId }) {
   const { data: imagesAlbum, isLoading } = useImageByAlbum(albumId);
@@ -22,7 +23,12 @@ export default function ImagesAlbum({ albumId }) {
           }
         />
       ) : (
-        <p>empty state image album</p>
+        <EmptyStateComponent
+          illustration={"/assets/svg/empty-image.svg"}
+          titleMessage={"No uploaded image yet"}
+          descriptionMessage={"Please upload your memorable image"}
+          withButton={false}
+        />
       )}
     </div>
   );
