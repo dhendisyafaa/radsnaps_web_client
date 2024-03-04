@@ -83,10 +83,11 @@ export const ContentReportUser = ({ content }) => {
       className="flex gap-2 items-center p-5 cursor-pointer"
       onClick={() => push(`/profile/${content.username}`)}
     >
-      <Avatar className="w-12 h-12">
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
+      <AvatarUserComponent
+        imageUrl={content.avatar}
+        withUsername={false}
+        username={content.username}
+      />
       <div>
         <p className="font-semibold text-lg">{content.username}</p>
         <p className="text-sm">{content.fullname}</p>
@@ -115,16 +116,14 @@ export const ContentReportAlbum = ({ content }) => {
           )}
         />
       </div>
-      <div className="w-full">
+      <div className="w-full space-y-1">
         <p className="text-sm md:text-lg font-semibold">{content.album_name}</p>
         <p className="text-xs md:text-sm truncate">{content.description}</p>
-        <div className="flex gap-2 items-center text-xs md:text-sm mt-3">
-          <Avatar className="w-6 h-6">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <p>{content.owner.username}</p>
-        </div>
+        <AvatarUserComponent
+          imageUrl={content.owner.avatar}
+          username={content.owner.username}
+          className="w-6 h-6"
+        />
       </div>
     </div>
   );
@@ -138,10 +137,11 @@ export const ContentReportCommentar = ({ content }) => {
       className="flex items-start gap-2 p-4 w-full cursor-pointer"
       onClick={() => push(`/gallery/detail/${content.image_id}`)}
     >
-      <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
+      <AvatarUserComponent
+        imageUrl={content.user.avatar}
+        withUsername={false}
+        username={content.user.username}
+      />
       <div className="">
         <p className="text-lg font-semibold leading-none tracking-tight">
           {content.user.username}
