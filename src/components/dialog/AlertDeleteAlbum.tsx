@@ -13,7 +13,7 @@ import {
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LoadingOval from "../common/loader/LoadingOval";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { useToast } from "../ui/use-toast";
 
 export default function AlertDeleteAlbum({ album_id, album_name }) {
@@ -68,9 +68,12 @@ export default function AlertDeleteAlbum({ album_id, album_name }) {
           <AlertDialogAction
             disabled={isPending}
             onClick={() => handleDeleteAlbum()}
+            className={buttonVariants({
+              variant: "destructive",
+            })}
           >
             {isPending && <LoadingOval className={"mr-3"} />}
-            Continue
+            Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

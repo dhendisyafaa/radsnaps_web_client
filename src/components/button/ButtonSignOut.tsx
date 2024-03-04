@@ -38,7 +38,7 @@ export default function ButtonSignOut() {
               })
             }
           >
-            Continue
+            Sign Out
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
