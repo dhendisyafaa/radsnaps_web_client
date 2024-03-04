@@ -7,7 +7,6 @@ import {
   getAllImage,
   getDetailImage,
   getImageByAlbum,
-  getImagesBySearch,
   getImagesByUser,
   getTrendingImage,
   postImage,
@@ -60,12 +59,12 @@ const useImageToAlbum = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => addImageToAlbum(axiosAuth, data),
-    onSettled: async (data, variables, context) => {
+    onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({
         queryKey: ["albums"],
       });
       await queryClient.invalidateQueries({
-        queryKey: ["album", `${context.album_id}`],
+        queryKey: ["image-album", `${variables.album_id}`],
       });
     },
   });
@@ -76,12 +75,12 @@ const useDeleteImageInAlbum = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => deleteImageInAlbum(axiosAuth, data),
-    onSettled: async (data, variables, context) => {
+    onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({
         queryKey: ["albums"],
       });
       await queryClient.invalidateQueries({
-        queryKey: ["album", `${context.album_id}`],
+        queryKey: ["image-album", `${variables.album_id}`],
       });
     },
   });
