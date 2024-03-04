@@ -9,6 +9,7 @@ import {
   Plus,
   UserRound,
 } from "lucide-react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
@@ -16,7 +17,7 @@ export default function NavigationButton() {
   const pathname = usePathname();
   const params = useSearchParams();
   const filterValue = params.get("filter");
-  const { username } = useUserData();
+  const { username, status } = useUserData();
 
   const currUrl = filterValue ? `${pathname}?filter=${filterValue}` : pathname;
 
@@ -58,10 +59,10 @@ export default function NavigationButton() {
         <Link href="/posting">
           <div
             className={cn(
-              "bg-primary rounded-full font-semibold p-3",
+              "rounded-full font-semibold p-3",
               currUrl === "/posting"
                 ? "bg-primary text-white"
-                : "bg-background text-foreground"
+                : "bg-primary md:bg-background text-foreground"
             )}
           >
             <div className="md:hidden [&_svg]:h-5 [&_svg]:w-5 text-white">
@@ -86,7 +87,13 @@ export default function NavigationButton() {
         </div>
       </Link>
       <div className="md:hidden">
-        <Link href={`/profile/${username}`}>
+        <Link
+          href={
+            status === "unauthenticated"
+              ? "/auth/login"
+              : `/profile/${username}`
+          }
+        >
           <div
             className={cn(
               "px-6 py-2 text-xs font-bold rounded-full",
