@@ -55,6 +55,7 @@
     "react-resizable-panels": "^2.0.9",
     "react-use": "^17.5.0",
     "recharts": "^2.12.0",
+    "sharp": "^0.33.2",
     "styled-components": "^5.3.6",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
