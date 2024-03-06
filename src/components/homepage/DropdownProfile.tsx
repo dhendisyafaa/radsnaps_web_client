@@ -33,7 +33,11 @@ export default function DropdownProfile() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <AvatarUserComponent withUsername={false} imageUrl={avatar.avatar} />
+          <AvatarUserComponent
+            withUsername={false}
+            imageUrl={avatar.avatar}
+            username={username}
+          />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
