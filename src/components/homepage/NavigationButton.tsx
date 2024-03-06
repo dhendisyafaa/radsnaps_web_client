@@ -22,11 +22,11 @@ export default function NavigationButton() {
   const currUrl = filterValue ? `${pathname}?filter=${filterValue}` : pathname;
 
   return (
-    <div className="flex gap-3 p-2 mx-1 md:mx-0 rounded-full items-center justify-around shadow-[0px_-1px_30px_0px_#7c3aed8b] md:shadow-md min-w-max bg-background">
+    <div className="flex gap-3 p-2 mx-1 md:mx-0 rounded-full items-center justify-around shadow-[0px_-1px_10px_0px_#7c3aed8b] md:shadow-md bg-background">
       <Link href="/">
         <div
           className={cn(
-            "px-6 py-2 text-xs font-bold rounded-full",
+            "p-2 sm:px-6 text-xs font-bold rounded-full",
             currUrl === "/"
               ? "bg-primary text-white"
               : "bg-background text-foreground"
@@ -41,7 +41,7 @@ export default function NavigationButton() {
       <Link href="/gallery">
         <div
           className={cn(
-            "px-6 py-2 text-xs font-bold rounded-full",
+            "p-2 sm:px-6 text-xs font-bold rounded-full",
             currUrl === "/gallery?filter=trending" ||
               currUrl === "/gallery?filter=newest" ||
               currUrl === "/gallery"
@@ -74,7 +74,7 @@ export default function NavigationButton() {
       <Link href="/album">
         <div
           className={cn(
-            "px-6 py-2 text-xs font-bold rounded-full",
+            "p-2 sm:px-6 text-xs font-bold rounded-full",
             currUrl === "/album"
               ? "bg-primary text-white"
               : "bg-background text-foreground"
@@ -96,7 +96,7 @@ export default function NavigationButton() {
         >
           <div
             className={cn(
-              "px-6 py-2 text-xs font-bold rounded-full",
+              "p-2 sm:px-6 text-xs font-bold rounded-full",
               pathname.startsWith("/profile")
                 ? "bg-primary text-white"
                 : "bg-background text-foreground"
