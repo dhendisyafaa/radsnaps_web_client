@@ -1,4 +1,5 @@
 import { useTrendingImage } from "@/app/api/resolver/imageResolver";
+import ErrorMessage from "@/components/common/ErrorMessage";
 import SkeletonTrendingImage from "@/components/common/skeleton/SkeletonTrendingImage";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -16,7 +17,7 @@ export default function CardImageTrending() {
         <SkeletonTrendingImage />
       </div>
     );
-  if (isError) return <p>error: {error}</p>;
+  if (isError) return <ErrorMessage errMessage={error.message} />;
 
   const trending = trendings.data.data;
 

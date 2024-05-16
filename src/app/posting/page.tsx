@@ -1,4 +1,5 @@
 "use client";
+import EmptyStateComponent from "@/components/common/EmptyStateComponent";
 import LoadingOval from "@/components/common/loader/LoadingOval";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,17 +23,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { cloudinaryCloudname } from "@/configs/config";
 import { useUserData } from "@/hooks/useUserData";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GalleryHorizontal, Replace, Upload } from "lucide-react";
+import { GalleryHorizontal, Replace } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import prettyBytes from "pretty-bytes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { usePostImage } from "../api/resolver/imageResolver";
-import { cn } from "@/lib/utils";
-import EmptyStateComponent from "@/components/common/EmptyStateComponent";
 
 export default function PostingNewImage() {
   const { mutateAsync: postImage, isPending } = usePostImage();
@@ -41,6 +41,7 @@ export default function PostingNewImage() {
   const { push } = useRouter();
   const [imageSrc, setImageSrc] = useState();
   const [imageInfo, setImageInfo] = useState();
+  const [isUploading, setIsUploading] = useState(false);
 
   const formSchema = z.object({
     image_title: z.string().min(2).max(100, {
@@ -62,14 +63,26 @@ export default function PostingNewImage() {
   });
 
   function handleOnChange(changeEvent) {
-    setImageInfo(changeEvent.target.files[0]);
+    const selectedFile = changeEvent.target.files[0];
+
+    const allowedTypeFile = ["image/jpeg", "image/png"];
+
+    if (!allowedTypeFile.includes(selectedFile.type)) {
+      toast({
+        variant: "destructive",
+        title: `Cannot upload files other than jpeg, jpg, and png yet`,
+      });
+      return;
+    }
+
+    setImageInfo(selectedFile);
     const reader = new FileReader();
 
     reader.onload = function (onLoadEvent) {
       setImageSrc(onLoadEvent.target.result);
     };
 
-    reader.readAsDataURL(changeEvent.target.files[0]);
+    reader.readAsDataURL(selectedFile);
   }
 
   const uploadImageToCloudinary = async (
@@ -116,6 +129,7 @@ export default function PostingNewImage() {
 
   async function handleOnSubmit(event) {
     event.preventDefault();
+    setIsUploading(true);
     try {
       const values = form.getValues();
       const upload = await uploadImageToCloudinary(
@@ -148,8 +162,10 @@ export default function PostingNewImage() {
         description:
           "Make sure your photos can be searched by users according to the tags you provide",
       });
+      setIsUploading(false);
       push(`/gallery/detail/${responseUpload?.data?.data.id}`);
     } catch (error) {
+      setIsUploading(false);
       console.log("error:", error);
       if (error.response) {
         toast({
@@ -162,7 +178,30 @@ export default function PostingNewImage() {
     }
   }
 
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (isUploading) {
+        const message =
+          "Upload is in progress. Are you sure you want to leave?";
+        event.returnValue = message;
+        return message;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isUploading]);
+
   const isSubmitting = form.formState.isSubmitting;
+  const buttonLoading =
+    isSubmitting ||
+    isPending ||
+    !imageSrc ||
+    form.getValues().image_title === "" ||
+    isUploading;
 
   return (
     <Form {...form}>
@@ -303,16 +342,11 @@ export default function PostingNewImage() {
           </div>
         </div>
         <Button
-          disabled={
-            form.formState.isSubmitting ||
-            isPending ||
-            !imageSrc ||
-            form.getValues().image_title === ""
-          }
+          disabled={buttonLoading}
           type="submit"
           className="w-full md:w-fit md:absolute md:-top-4 md:right-5 z-50"
         >
-          {isPending && <LoadingOval className={"mr-3"} />}
+          {isUploading && <LoadingOval className={"mr-3"} />}
           Posting
         </Button>
         <div>

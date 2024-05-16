@@ -38,9 +38,12 @@ export const useCreateAlbum = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => createAlbum(axiosAuth, data),
-    onSettled: (data, variables, context) => {
-      queryClient.invalidateQueries({
+    onSettled: async (data, variables, context) => {
+      await queryClient.invalidateQueries({
         queryKey: ["albums"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["official-albums"],
       });
     },
   });
@@ -58,6 +61,9 @@ export const useUpdateAlbum = () => {
       await queryClient.invalidateQueries({
         queryKey: ["albums"],
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["official-albums"],
+      });
     },
   });
 };
@@ -70,6 +76,9 @@ export const useDeleteAlbum = () => {
     onSettled: async (data, variables, context) => {
       await queryClient.invalidateQueries({
         queryKey: ["albums"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["official-albums"],
       });
     },
   });

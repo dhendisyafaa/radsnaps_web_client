@@ -19,6 +19,7 @@ import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
 import EmptyStateComponent from "../common/EmptyStateComponent";
+import ErrorMessage from "../common/ErrorMessage";
 import LoadingThreeDoots from "../common/loader/LoadingThreeDoots";
 import FormCreateAlbum from "../form/FormCreateAlbum";
 import { Button } from "../ui/button";
@@ -26,8 +27,9 @@ import { Skeleton } from "../ui/skeleton";
 import { useToast } from "../ui/use-toast";
 
 export default function ButtonSaveToAlbum({
-  className,
+  saved,
   image_id,
+  className,
   withLabel = true,
 }) {
   const { user_id, status } = useUserData();
@@ -45,7 +47,7 @@ export default function ButtonSaveToAlbum({
   const { toast } = useToast();
 
   if (isLoading) return <Skeleton className="w-6 h-6 rounded-full" />;
-  if (isError) return <p>error: {error}</p>;
+  if (isError) return <ErrorMessage errMessage={error.message} />;
 
   const albums = albumsUser.data.data;
 
@@ -54,6 +56,8 @@ export default function ButtonSaveToAlbum({
       const data = {
         album_id,
         image_id,
+        user_id,
+        updated_at: new Date().toISOString(),
       };
       await addImageToAlbum(data);
     } catch (error) {
@@ -73,6 +77,8 @@ export default function ButtonSaveToAlbum({
       await deleteImageInAlbum({
         album_id,
         image_id,
+        user_id,
+        updated_at: new Date().toISOString(),
       });
     } catch (error) {
       if (error.response) {
@@ -86,9 +92,9 @@ export default function ButtonSaveToAlbum({
     }
   };
 
-  const imageIsSaved = albums.map((album) =>
-    album.images.some((image) => image.image_id === image_id)
-  );
+  // const imageIsSaved = albums.map((album) =>
+  //   album.images.some((image) => image.image_id === image_id)
+  // );
 
   return (
     <div>
@@ -101,18 +107,12 @@ export default function ButtonSaveToAlbum({
           status === "unauthenticated" ? signIn() : setModalSelectAlbum(true)
         }
       >
-        {imageIsSaved.includes(true) ? (
+        {saved.includes(true) ? (
           <Bookmark className="text-primary fill-primary" />
         ) : (
           <Bookmark className="hover:fill-primary hover:text-primary duration-100 transition-all ease-in-out" />
         )}
-        {withLabel ? (
-          imageIsSaved.includes(true) ? (
-            <p>Saved</p>
-          ) : (
-            <p>Save</p>
-          )
-        ) : null}
+        {withLabel ? saved.includes(true) ? <p>Saved</p> : <p>Save</p> : null}
       </div>
       <Dialog open={modalSelectAlbum} onOpenChange={setModalSelectAlbum}>
         <DialogContent className="max-h-[90vh] w-[95%] md:w-xl rounded-lg">
@@ -124,19 +124,16 @@ export default function ButtonSaveToAlbum({
           </DialogHeader>
           <div className="h-full flex flex-col gap-2 max-h-[50vh] overflow-y-auto my-6">
             {albums.length !== 0 ? (
-              albums.map((album) => {
-                const isSaved = album?.images.some(
-                  (image) => image.image_id === image_id
-                );
+              albums.map((album, i) => {
                 return (
                   <div
                     key={album.id}
                     className={cn(
                       "rounded-lg border bg-card text-card-foreground shadow-sm p-1 flex items-center justify-between cursor-pointer select-none group hover:border-primary duration-300",
-                      isSaved && "border-primary"
+                      saved[i] && "border-primary"
                     )}
                     onClick={() =>
-                      !isSaved
+                      !saved[i]
                         ? handleAddImageToAlbum(album.id)
                         : handleDeleteImageInAlbum(album.id)
                     }
@@ -157,18 +154,18 @@ export default function ButtonSaveToAlbum({
                         <p
                           className={cn(
                             "text-sm font-semibold leading-none tracking-tight",
-                            isSaved && "text-primary"
+                            saved[i] && "text-primary"
                           )}
                         >
                           {album.album_name}
                         </p>
-                        <p className="text-xs text-muted-foreground">{`${album.images.length} images`}</p>
+                        <p className="text-xs text-muted-foreground">{`${album._count.images} images`}</p>
                         <p className="text-[11px] text-muted-foreground">
                           {relativeTimeSuffix(album.updated_at)}
                         </p>
                       </div>
                     </div>
-                    {isSaved ? (
+                    {saved[i] ? (
                       <Button variant={"ghost"} size={"icon"}>
                         <Check />
                       </Button>

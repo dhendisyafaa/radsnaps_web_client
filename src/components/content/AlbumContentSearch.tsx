@@ -1,10 +1,10 @@
 import AlbumGridView from "../album/AlbumGridView";
 import EmptyStateComponent from "../common/EmptyStateComponent";
 
-export default function AlbumContentSearch({ albums }) {
-  return albums.length !== 0 ? (
+export default function AlbumContentSearch({ content }) {
+  return content.length !== 0 ? (
     <AlbumGridView
-      albums={albums}
+      albums={content}
       className={
         "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"
       }

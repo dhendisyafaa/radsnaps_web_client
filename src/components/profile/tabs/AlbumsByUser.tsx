@@ -1,6 +1,7 @@
 import { useAlbumsByUser } from "@/app/api/resolver/albumResolver";
 import AlbumGridView from "@/components/album/AlbumGridView";
 import EmptyStateComponent from "@/components/common/EmptyStateComponent";
+import ErrorMessage from "@/components/common/ErrorMessage";
 import SkeletonGallery from "@/components/common/skeleton/SkeletonGallery";
 
 export default function AlbumsByUser({ userId }) {
@@ -12,7 +13,7 @@ export default function AlbumsByUser({ userId }) {
   } = useAlbumsByUser({ user_id: userId });
 
   if (isLoading) return <SkeletonGallery withHeader={false} />;
-  if (isError) return <p>error: {error}</p>;
+  if (isError) return <ErrorMessage errMessage={error.message} />;
 
   const albums = albumsUser.data.data;
   return (

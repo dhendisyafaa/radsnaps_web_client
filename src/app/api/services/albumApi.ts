@@ -1,8 +1,9 @@
 import axios from "@/lib/axios";
 import { convertToURI } from "@/utils/convertObjectToURI";
 
-export const getAllAlbum = () => {
-  return axios.get(`/album`);
+export const getAllAlbum = (params) => {
+  const objString = convertToURI(params);
+  return axios.get(`/album/${objString}`);
 };
 
 export const getAllOfficialAlbum = () => {

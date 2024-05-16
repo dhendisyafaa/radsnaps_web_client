@@ -65,6 +65,7 @@ export default function DetailAlbumPage({ params }) {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {topFiveTags !== "" &&
+              topFiveTags.length !== 1 &&
               topFiveTags.map((tag, index) => (
                 <Badge key={index} variant="secondary">
                   {tag}
@@ -76,7 +77,7 @@ export default function DetailAlbumPage({ params }) {
             <p className="text-sm md:text-lg md:w-[80%]">{album.description}</p>
           </div>
           <div className="flex items-end justify-between">
-            <div onClick={() => {}}>
+            <div>
               <p className="font-semibold text-sm mb-2">Created by</p>
               <div className="flex gap-2 items-center">
                 <AvatarUserComponent

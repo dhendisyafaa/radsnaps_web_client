@@ -31,7 +31,7 @@ export default function TabsProfile({ userId }) {
         ))}
       </TabsList>
       {TAB_LIST.map((tab, i) => (
-        <TabsContent key={i} value={tab.value}>
+        <TabsContent key={i} value={tab.value} className="pb-24">
           {tab.content}
         </TabsContent>
       ))}

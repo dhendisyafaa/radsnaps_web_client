@@ -10,10 +10,10 @@ import { formatNumber } from "@/utils/formatNumber";
 import { Heart, HeartCrack, HeartPulse } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useToast } from "../ui/use-toast";
-
 export default function ButtonLike({
-  likes,
-  image_id,
+  totalLike,
+  isLiked,
+  imageId,
   className,
   withLikeLength = true,
 }) {
@@ -23,58 +23,46 @@ export default function ButtonLike({
   const { user_id, status } = useUserData();
   const { toast } = useToast();
 
-  const isUserLiked = () => {
-    return likes.some(
-      (like) =>
-        like.user ? like.user.id === user_id : like.user_id === user_id
-      // (like) => like.user_id === user_id || like?.user?.id === user_id
-    );
-  };
-
-  const isUserLikedImage = isUserLiked();
-
   const handleCreateLike = async () => {
     if (loadCreateLike || loadDislike) return null;
     if (status === "authenticated") {
-      try {
-        if (!isUserLikedImage) {
+      if (!isLiked) {
+        try {
           await createLike({
-            image_id,
-            user_id: user_id,
+            image_id: imageId,
           });
-        } else {
-          const likeToDelete = likes.find((like) =>
-            like.user ? like.user.id === user_id : like.user_id === user_id
-          );
-          if (likeToDelete) {
-            await dislike({
-              id: likeToDelete.id,
-              image_id,
+        } catch (error) {
+          console.log("error:", error);
+          if (error.response) {
+            toast({
+              variant: "destructive",
+              title: `${
+                error.response?.data?.message || "Like content failed"
+              }`,
             });
           }
         }
-      } catch (error) {
-        if (error.response) {
-          toast({
-            variant: "destructive",
-            title: `${error.response?.data?.message || "Like content failed"}`,
+      } else {
+        try {
+          await dislike({
+            image_id: imageId,
           });
+        } catch (error) {
+          console.log("error:", error);
+          if (error.response) {
+            toast({
+              variant: "destructive",
+              title: `${
+                error.response?.data?.message || "Dislike content failed"
+              }`,
+            });
+          }
         }
       }
     } else {
       signIn();
     }
   };
-
-  let lengthLikes;
-
-  if (loadCreateLike) {
-    lengthLikes = likes.length + 1;
-  } else if (loadDislike) {
-    lengthLikes = likes.length - 1;
-  } else {
-    lengthLikes = likes.length;
-  }
 
   return (
     <div
@@ -88,13 +76,12 @@ export default function ButtonLike({
         <HeartPulse className="text-primary" />
       ) : loadDislike ? (
         <HeartCrack />
-      ) : isUserLikedImage ? (
+      ) : isLiked ? (
         <Heart className="text-primary fill-primary" />
       ) : (
         <Heart className="hover:fill-primary hover:text-primary duration-100 transition-all ease-in-out" />
       )}
-
-      {withLikeLength && <p>{formatNumber(lengthLikes)}</p>}
+      {withLikeLength && <p>{formatNumber(totalLike)}</p>}
     </div>
   );
 }

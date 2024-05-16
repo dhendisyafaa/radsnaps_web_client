@@ -1,25 +1,18 @@
 "use client";
-import { useCommentByImage } from "@/app/api/resolver/commentResolver";
 import { useUserData } from "@/hooks/useUserData";
 import SkeletonComment from "../common/skeleton/SkeletonComment";
 import FormCreateComment from "../form/FormCreateComment";
 import CommentUserComponent from "./CommentUserComponent";
 
-export default function CommentSection({ imageId }) {
-  const { user_id, username, status } = useUserData();
-  const { data: commentsData, isLoading: loadComments } =
-    useCommentByImage(imageId);
-
-  if (loadComments || status === "loading") return <SkeletonComment />;
-
-  const comments = commentsData.data.data;
+export default function CommentSection({ imageId, totalComment }) {
+  const { username } = useUserData();
 
   return (
     <div>
       <p className="text-base font-semibold leading-none tracking-tight">
-        {`Comments ${comments.length}`}
+        {`Comments ${totalComment}`}
       </p>
-      <CommentUserComponent comments={comments} username={username} />
+      <CommentUserComponent username={username} image_id={imageId} />
       <div className="p-3 bg-background border-t">
         <FormCreateComment image_id={imageId} />
       </div>

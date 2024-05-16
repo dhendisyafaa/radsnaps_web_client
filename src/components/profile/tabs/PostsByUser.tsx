@@ -1,5 +1,6 @@
 import { useImagesByUser } from "@/app/api/resolver/imageResolver";
 import EmptyStateComponent from "@/components/common/EmptyStateComponent";
+import ErrorMessage from "@/components/common/ErrorMessage";
 import SkeletonGallery from "@/components/common/skeleton/SkeletonGallery";
 import GalleryGridView from "@/components/gallery/GalleryGridView";
 import { useRouter } from "next/navigation";
@@ -16,7 +17,7 @@ export default function PostsByUser({ userId }) {
   const { push } = useRouter();
 
   if (isLoading) return <SkeletonGallery withHeader={false} />;
-  if (isError) return <p>error: {error}</p>;
+  if (isError) return <ErrorMessage errMessage={error.message} />;
 
   const images = imagesUser.data.data;
   return (
@@ -26,7 +27,7 @@ export default function PostsByUser({ userId }) {
           images={images}
           withLike={false}
           withOverlay={false}
-          className={"columns-3 gap-3 space-y-3"}
+          className={"columns-2 sm:columns-3 gap-3 space-y-3"}
         />
       ) : (
         <EmptyStateComponent

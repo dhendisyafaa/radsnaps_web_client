@@ -34,6 +34,7 @@ export default function FormCreateAlbum() {
   const { user_id, status } = useUserData();
   const [openDialog, setOpenDialog] = useState(false);
   const [imageSrc, setImageSrc] = useState();
+  const [isUploading, setIsUploading] = useState(false);
 
   const formSchema = z.object({
     album_name: z.string().min(2).max(50),
@@ -104,6 +105,7 @@ export default function FormCreateAlbum() {
 
   async function handleOnSubmit(event) {
     event.preventDefault();
+    setIsUploading(true);
     try {
       const values = form.getValues();
       const upload = await uploadImageToCloudinary(
@@ -127,7 +129,9 @@ export default function FormCreateAlbum() {
       });
       form.reset();
       setOpenDialog(false);
+      setIsUploading(false);
     } catch (error) {
+      setIsUploading(false);
       console.log("error:", error);
       if (error.response) {
         toast({
@@ -145,54 +149,11 @@ export default function FormCreateAlbum() {
 
   const isSubmitting = form.formState.isSubmitting;
 
-  //  async function onSubmit(values: z.infer<typeof formSchema>) {
-  //    try {
-  //      const data = {
-  //        ...values,
-  //        owner_id: user_id,
-  //        data_image: selectedFile,
-  //      };
-  //      await createAlbum(data);
-  //  toast({
-  //    title: "Yeah, success create your album!",
-  //    description: "Get ready to have your album seen by many people",
-  //  });
-  //  form.reset();
-  //  setOpenDialog(false);
-  //    } catch (error) {
-  //      console.log("error:", error);
-  //  if (error.response) {
-  //    toast({
-  //      variant: "destructive",
-  //      title: `${
-  //        error.response?.data?.message || "Failed to create album"
-  //      }`,
-  //    });
-  //  }
-  //    }
-  //  }
-
-  //  useEffect(() => {
-  //    if (!selectedFile) {
-  //      setPreview(undefined);
-  //      return;
-  //    }
-
-  //    const objectUrl = URL.createObjectURL(selectedFile);
-  //    setPreview(objectUrl);
-  //    return () => URL.revokeObjectURL(objectUrl);
-  //  }, [selectedFile]);
-
-  //  const onSelectFile = (e) => {
-  //    if (!e.target.files || e.target.files.length === 0) {
-  //      setSelectedFile(undefined);
-  //      return;
-  //    }
-
-  //    setSelectedFile(e.target.files[0]);
-  //  };
-
-  //  const isSubmitting = form.formState.isSubmitting;
+  const buttonLoading =
+    isSubmitting ||
+    isPending ||
+    form.getValues().album_name === "" ||
+    isUploading;
 
   return (
     <Drawer open={openDialog} onClose={() => setOpenDialog(false)}>
@@ -213,74 +174,6 @@ export default function FormCreateAlbum() {
           <Form {...form}>
             <form onSubmit={handleOnSubmit} className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* {selectedFile ? (
-                  <div className="relative min-h-[50vh] md:min-h-screen max-h-screen border rounded-lg">
-                    <div className="absolute bottom-3 right-3 z-10">
-                      <FormField
-                        control={form.control}
-                        name="data_image"
-                        render={({ field: { onChange, value, ...rest } }) => (
-                          <FormItem>
-                            <FormLabel className="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-full text-xs [&_svg]:h-5 [&_svg]:w-5 font-medium text-center py-2 px-3 cursor-pointer flex items-center gap-2">
-                              <Replace />
-                              Change image
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                className="hidden"
-                                accept="image/*"
-                                name="data_image"
-                                type="file"
-                                disabled={
-                                  form.formState.isSubmitting || isPending
-                                }
-                                onChange={onSelectFile}
-                                {...rest}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    <Image
-                      src={preview}
-                      alt="test"
-                      fill={true}
-                      quality={10}
-                      className="object-contain"
-                    />
-                  </div>
-                ) : (
-                  <FormField
-                    control={form.control}
-                    name="data_image"
-                    render={({ field: { onChange, value, ...rest } }) => (
-                      <FormItem>
-                        <FormLabel>Album Cover</FormLabel>
-                        <div className="flex items-center gap-2">
-                          <FormControl>
-                            <Input
-                              {...rest}
-                              accept="image/*"
-                              name="data_image"
-                              type="file"
-                              disabled={isSubmitting || isPending}
-                              onChange={onSelectFile}
-                            />
-                          </FormControl>
-                          <FormLabel className="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-md text-xs font-medium text-center py-1 px-3">
-                            Choose Image
-                          </FormLabel>
-                        </div>
-                        <FormDescription>
-                          Album cover should describe the content of the album
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )} */}
                 <div>
                   <div
                     className={cn(
@@ -396,9 +289,9 @@ export default function FormCreateAlbum() {
                     <Button
                       type="submit"
                       className="w-full md:w-fit flex items-center gap-2"
-                      disabled={isSubmitting || isPending}
+                      disabled={buttonLoading}
                     >
-                      {isSubmitting || (isPending && <LoadingOval />)}
+                      {isUploading || (isPending && <LoadingOval />)}
                       Create album
                     </Button>
                   </div>

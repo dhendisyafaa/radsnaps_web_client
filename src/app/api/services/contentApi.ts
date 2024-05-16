@@ -1,9 +1,9 @@
 import axios from "@/lib/axios";
 import { convertToURI } from "@/utils/convertObjectToURI";
 
-export const getContentBySearch = (endpoint, params) => {
+export const getContentBySearch = (auth, type, params) => {
   const objString = convertToURI(params);
-  return axios.get(`/${endpoint}/search${objString}`);
+  return auth.get(`/${type}/search${objString}`);
 };
 
 export const getContentReported = (auth, endpoint, id) => {

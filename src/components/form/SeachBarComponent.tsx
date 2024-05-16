@@ -14,10 +14,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 
-export default function SeachBarComponent({
-  className = "max-w-md",
-  endpoint,
-}) {
+export default function SeachBarComponent({ className = "max-w-md", type }) {
   const { push } = useRouter();
   const params = useSearchParams();
   const q = params.get("q");
@@ -29,14 +26,14 @@ export default function SeachBarComponent({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    values: {
       search: `${decodeURI || ""}`,
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const encodedValues = values.search.replace(/\s/g, "-");
-    push(`/search/${endpoint}?q=${encodedValues}`);
+    push(`/search/${type}?q=${encodedValues}`);
   }
 
   return (
