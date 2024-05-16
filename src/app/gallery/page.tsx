@@ -1,8 +1,12 @@
 "use client";
 
+import EmptyStateComponent from "@/components/common/EmptyStateComponent";
+import ErrorMessage from "@/components/common/ErrorMessage";
+import LoadingThreeDoots from "@/components/common/loader/LoadingThreeDoots";
 import SkeletonGallery from "@/components/common/skeleton/SkeletonGallery";
 import SeachBarComponent from "@/components/form/SeachBarComponent";
 import GalleryGridView from "@/components/gallery/GalleryGridView";
+import { Icons } from "@/components/icons";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Select,
@@ -12,42 +16,88 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FILTERIMAGE } from "@/constants/data";
+import useAxiosAuth from "@/hooks/useAxiosAuth";
 import { cn } from "@/lib/utils";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { useAllImage } from "../api/resolver/imageResolver";
-import { Icons } from "@/components/icons";
-import EmptyStateComponent from "@/components/common/EmptyStateComponent";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
+import { getAllImage } from "../api/services/imageApi";
 
 export default function GalleryPage() {
   const pathname = usePathname();
   const params = useSearchParams();
   const filterValue = params.get("filter");
   const [selectedFilter, setSelectedFilter] = useState(filterValue);
+  const { push, replace } = useRouter();
+  const { ref, inView } = useInView();
+  const axiosAuth = useAxiosAuth();
+
   const {
-    data: imagesData,
     isLoading,
     isError,
+    data,
     error,
-  } = useAllImage({
-    filter: selectedFilter,
+    isFetching,
+    isFetchingNextPage,
+    isFetchingPreviousPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["images", `${selectedFilter || null}`],
+    queryFn: async ({ pageParam = "" }) => {
+      const res = await getAllImage(axiosAuth, {
+        filter: selectedFilter,
+        limit: 10,
+        cursor: pageParam,
+      });
+      return res.data;
+    },
+    getNextPageParam: ({ data }) => {
+      const images = data.images;
+      return images ? images[images.length - 1].id : undefined;
+    },
+    refetchOnWindowFocus: false,
   });
-  const { push } = useRouter();
 
-  const currUrl = `${pathname}?${params}`;
+  useEffect(() => {
+    if (inView || hasNextPage) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, inView, hasNextPage]);
 
   if (isLoading) return <SkeletonGallery />;
-  if (isError) return <p>error: {error}</p>;
+  if (isError) return <ErrorMessage errMessage={error.message} />;
+  if (filterValue === "") return replace("/gallery");
 
-  const images = imagesData.data.data;
+  const dataImages = () => {
+    if (data && data.pages) {
+      return data.pages.reduce((prev, { data }) => {
+        const images = data.images;
+        if (images) prev.push(...images);
+        return prev;
+      }, []);
+    }
+  };
+
+  const allImages = dataImages();
+
+  const currUrl = `${pathname}?${params}`;
 
   const handleValueChange = (value) => {
     setSelectedFilter(value);
     push(`/gallery?filter=${value}`);
   };
 
+  const IconFilterMobile =
+    Icons[
+      FILTERIMAGE.find(
+        (filter) => filter.label.toLowerCase() === selectedFilter
+      )?.icon || "listFilter"
+    ];
+
   return (
-    <div className="pb-10 flex flex-col gap-8">
+    <div className="pb-20 md:pb-10 flex flex-col gap-8">
       <div className="flex justify-between items-center gap-3">
         <ScrollArea className="max-w-[600px] lg:max-w-none hidden md:block">
           <div className="flex items-center">
@@ -78,11 +128,7 @@ export default function GalleryPage() {
               aria-label="Select filter"
             >
               <SelectValue placeholder="Select a filter">
-                {
-                  FILTERIMAGE.find(
-                    (filter) => filter.label.toLowerCase() === selectedFilter
-                  )?.icon
-                }
+                <IconFilterMobile />
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
@@ -103,15 +149,32 @@ export default function GalleryPage() {
             </SelectContent>
           </Select>
         </div>
-        <SeachBarComponent endpoint={"image"} />
+        <SeachBarComponent type={"image"} />
       </div>
-      {images.length != 0 ? (
-        <GalleryGridView
-          images={images}
-          className={
-            "columns-2 gap-3 lg:gap-5 space-y-5 sm:columns-3 lg:columns-4 xl:columns-5"
-          }
-        />
+      {allImages.length != 0 ? (
+        <div>
+          <GalleryGridView
+            images={allImages}
+            className={
+              "columns-2 gap-3 lg:gap-5 space-y-5 sm:columns-3 lg:columns-4 xl:columns-5"
+            }
+          />
+          <div ref={ref} className="my-6">
+            {isFetchingNextPage ? (
+              <div className="w-full rounded-full grid place-items-center p-3 text-xs border border-border">
+                <LoadingThreeDoots />
+              </div>
+            ) : hasNextPage ? (
+              <p className="text-xs text-muted-foreground text-center">
+                Load Newer
+              </p>
+            ) : (
+              <p className="text-xs text-muted-foreground text-center">
+                Nothing more to load
+              </p>
+            )}
+          </div>
+        </div>
       ) : (
         <EmptyStateComponent
           illustration={"/assets/svg/empty-image.svg"}

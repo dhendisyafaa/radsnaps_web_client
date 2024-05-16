@@ -1,17 +1,18 @@
 import axios from "@/lib/axios";
 import { convertToURI } from "@/utils/convertObjectToURI";
 
-export const getAllImage = (params) => {
+export const getAllImage = (auth, params) => {
   const objString = convertToURI(params);
-  return axios.get(`/image/${objString}`);
+  return auth.get(`/image/${objString}`);
 };
 
-export const getDetailImage = (id) => {
-  return axios.get(`/image/${id}`);
+export const getDetailImage = (auth, id) => {
+  return auth.get(`/image/${id}`);
 };
 
-export const getImageByAlbum = (id) => {
-  return axios.get(`/image/album/${id}`);
+export const getImageByAlbum = (auth, id, params) => {
+  const objString = convertToURI(params);
+  return auth.get(`/image/album/${id}${objString}`);
 };
 
 export const getImagesByUser = (params) => {

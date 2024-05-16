@@ -18,7 +18,7 @@ export default function AlbumGridView({
       {albums.map((album) => (
         <div
           key={album.id}
-          className="group cursor-pointer rounded-lg"
+          className="group cursor-pointer rounded-lg hover:shadow-primary hover:shadow"
           onClick={() => push(`/album/${album.id}`)}
         >
           <AspectRatio
@@ -55,7 +55,7 @@ export default function AlbumGridView({
                   />
                   <p>{album.owner.username}</p>
                 </div>
-                • <p>{album.images.length} images</p>
+                • <p>{album._count.images} images</p>
               </div>
             )}
           </div>

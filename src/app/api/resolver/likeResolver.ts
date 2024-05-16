@@ -7,6 +7,7 @@ import {
   getLikeByImage,
   getLikeByUser,
 } from "../services/likeApi";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export const useLikeByImage = (data) => {
   const axiosAuth = useAxiosAuth();
@@ -16,16 +17,21 @@ export const useLikeByImage = (data) => {
 };
 
 export const useLikeByUser = (params) => {
-  const axiosAuth = useAxiosAuth();
   return useQueryNoRefecth(
     ["like", params.user_id],
-    async () => await getLikeByUser(axiosAuth, params)
+    async () => await getLikeByUser(params)
   );
 };
 
 export const useCreateLikeByImage = () => {
   const axiosAuth = useAxiosAuth();
   const queryClient = useQueryClient();
+  const params = useSearchParams();
+  const query = params.get("q");
+  const decodeURI = query?.replace(/-/g, " ");
+  const pathname = usePathname();
+  const albumId = pathname.split("/")[2];
+
   return useMutation({
     mutationFn: (data) => createLikeImage(axiosAuth, data),
     onSuccess: async (data, variables, context) => {
@@ -36,6 +42,12 @@ export const useCreateLikeByImage = () => {
         queryKey: ["image-album", `${variables.image_id}`],
       });
       await queryClient.invalidateQueries({ queryKey: ["images"] });
+      await queryClient.invalidateQueries({
+        queryKey: ["search image", `${decodeURI}`],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["image-album", `${albumId}`],
+      });
     },
   });
 };
@@ -43,8 +55,14 @@ export const useCreateLikeByImage = () => {
 export const useDislikeImage = () => {
   const axiosAuth = useAxiosAuth();
   const queryClient = useQueryClient();
+  const params = useSearchParams();
+  const query = params.get("q");
+  const decodeURI = query?.replace(/-/g, " ");
+  const pathname = usePathname();
+  const albumId = pathname.split("/")[2];
+
   return useMutation({
-    mutationFn: (data) => dislikeImage(axiosAuth, data.id),
+    mutationFn: (data) => dislikeImage(axiosAuth, data.image_id),
     onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({
         queryKey: ["image", `${variables.image_id}`],
@@ -53,6 +71,12 @@ export const useDislikeImage = () => {
         queryKey: ["image-album", `${variables.image_id}`],
       });
       await queryClient.invalidateQueries({ queryKey: ["images"] });
+      await queryClient.invalidateQueries({
+        queryKey: ["search image", `${decodeURI}`],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["image-album", `${albumId}`],
+      });
     },
   });
 };

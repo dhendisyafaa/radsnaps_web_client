@@ -16,7 +16,10 @@ export default function Providers(props: { children: React.ReactNode }) {
     >
       <SessionProvider>
         <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            buttonPosition="bottom-left"
+          />
           {props.children}
         </QueryClientProvider>
       </SessionProvider>

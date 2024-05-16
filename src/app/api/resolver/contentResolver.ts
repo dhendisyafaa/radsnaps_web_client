@@ -9,8 +9,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useContentBySearch = (data) => {
   return useQueryNoRefecth(
-    [`search ${data.endpoint}`, `${data.query.q}`],
-    async () => await getContentBySearch(data.endpoint, data.query)
+    [`search ${data.type}`, `${data.query.search}`],
+    async () => await getContentBySearch(data.type, data.query)
   );
 };
 

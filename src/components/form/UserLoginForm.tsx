@@ -28,7 +28,8 @@ export default function UserLoginForm() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const params = searchParams.get("callbackUrl");
-  const callbackUrl = params === `${baseUrlWeb}/` ? "/gallery" : params;
+  const callbackUrl =
+    params === `${baseUrlWeb}/` ? `${baseUrlWeb}/gallery` : params;
 
   const Icon = Icons.google;
 
@@ -115,7 +116,7 @@ export default function UserLoginForm() {
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="inforadcliffe@gmail.com"
+                    placeholder="Your email address"
                     {...field}
                   />
                 </FormControl>
@@ -130,11 +131,7 @@ export default function UserLoginForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Masukkan Kata Sandi"
-                    type="password"
-                    {...field}
-                  />
+                  <Input placeholder="*****" type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -1,12 +1,13 @@
+import axios from "@/lib/axios";
 import { convertToURI } from "@/utils/convertObjectToURI";
 
 export const getLikeByImage = (auth, id) => {
   return auth.get(`/like/${id}`);
 };
 
-export const getLikeByUser = (auth, params) => {
+export const getLikeByUser = (params) => {
   const objString = convertToURI(params);
-  return auth.get(`/like/user/${objString}`);
+  return axios.get(`/like/user/${objString}`);
 };
 
 export const createLikeImage = (auth, data) => {
@@ -14,5 +15,5 @@ export const createLikeImage = (auth, data) => {
 };
 
 export const dislikeImage = (auth, id) => {
-  return auth.delete(`/like/${id}`);
+  return auth.delete(`/dislike/image/${id}`);
 };

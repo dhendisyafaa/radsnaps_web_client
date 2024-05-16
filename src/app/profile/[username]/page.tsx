@@ -32,6 +32,7 @@ import {
   DialogTrigger,
 } from "../../../components/ui/dialog";
 import LoadingThreeDoots from "@/components/common/loader/LoadingThreeDoots";
+import ErrorMessage from "@/components/common/ErrorMessage";
 
 export default function ProfilePage({ params }) {
   const { username } = useUserData();
@@ -51,7 +52,7 @@ export default function ProfilePage({ params }) {
         <LoadingThreeDoots />
       </div>
     );
-  if (isError) return <p>error: {error}</p>;
+  if (isError) return <ErrorMessage errMessage={error.message} />;
 
   const user = userData.data.data;
   const baseUrl = window.location;
@@ -60,7 +61,7 @@ export default function ProfilePage({ params }) {
     <div className="w-full space-y-6">
       <div className="space-y-1">
         <div className="flex items-center justify-between">
-          <div>
+          <div className="max-w-[70%]">
             <div
               className="flex items-center gap-2 cursor-pointer mb-6 group w-fit"
               onClick={() => back()}

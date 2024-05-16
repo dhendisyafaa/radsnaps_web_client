@@ -12,10 +12,12 @@ import AvatarUserComponent from "../profile/AvatarUserComponent";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import CommentSection from "./CommentSection";
+import EmptyStateComponent from "../common/EmptyStateComponent";
+import ErrorMessage from "../common/ErrorMessage";
 
 export default function DetailImageComponent({ imageId }) {
   const [imageLoading, setImageLoading] = useState(true);
-  const { data: image, isLoading } = useDetailImage(imageId);
+  const { data: image, isLoading, isError, error } = useDetailImage(imageId);
   const { push } = useRouter();
 
   if (isLoading)
@@ -24,6 +26,23 @@ export default function DetailImageComponent({ imageId }) {
         <LoadingThreeDoots />
       </div>
     );
+
+  if (image === undefined)
+    return (
+      <EmptyStateComponent
+        width={100}
+        height={100}
+        withButton={false}
+        descriptionMessage={
+          "Image may have been deleted by the owner or the Radsnaps system"
+        }
+        titleMessage={"This image is no longer available"}
+        illustration={"/assets/svg/empty-image.svg"}
+      />
+    );
+
+  if (isError) return <ErrorMessage errMessage={error.message} />;
+
   const detailImage = image.data.data;
 
   return (
@@ -50,56 +69,54 @@ export default function DetailImageComponent({ imageId }) {
           ))}
         </div>
       </div>
-      <div>
-        <div className="space-y-5 mb-5">
+      <div className="space-y-5">
+        <div className="space-y-5">
           <p className="text-2xl font-semibold leading-none tracking-tight">
             {detailImage.image_title}
           </p>
-          <div>
-            <div className="flex justify-between items-end mb-2">
-              <p className="text-lg font-semibold leading-none tracking-tight">
-                Description
-              </p>
-              <div className="flex items-center justify-end gap-4 p-3">
-                <ButtonLike
-                  likes={detailImage.likes}
-                  image_id={detailImage.id}
-                  className={
-                    "text-xs [&_svg]:h-5 [&_svg]:w-5 md:[&_svg]:h-6 md:[&_svg]:w-6"
-                  }
-                />
-                <ButtonDownloadImage
-                  imageUrl={detailImage.image_url}
-                  filename={`${detailImage.owner.username}-${detailImage.original_filename}-radsnaps.jpg`}
-                  className={
-                    "text-xs [&_svg]:h-5 [&_svg]:w-5 md:[&_svg]:h-6 md:[&_svg]:w-6"
-                  }
-                />
-                <ButtonSaveToAlbum
-                  image_id={detailImage.id}
-                  className={
-                    "text-xs [&_svg]:h-5 [&_svg]:w-5 md:[&_svg]:h-6 md:[&_svg]:w-6"
-                  }
-                />
-                <ButtonShare
-                  className={
-                    "text-xs [&_svg]:h-5 [&_svg]:w-5 md:[&_svg]:h-6 md:[&_svg]:w-6"
-                  }
-                />
-                <ButtonReportIssue
-                  content_type={"image"}
-                  content_id={detailImage.id}
-                  className={
-                    "text-xs [&_svg]:h-5 [&_svg]:w-5 md:[&_svg]:h-6 md:[&_svg]:w-6"
-                  }
-                />
-              </div>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">
-                {detailImage.image_description}
-              </p>
-            </div>
+          <div className="flex items-center justify-end gap-4">
+            <ButtonLike
+              totalLike={detailImage.total_like}
+              isLiked={detailImage.user_liked}
+              imageId={detailImage.id}
+              className={
+                "text-xs [&_svg]:h-5 [&_svg]:w-5 md:[&_svg]:h-6 md:[&_svg]:w-6"
+              }
+            />
+            <ButtonDownloadImage
+              imageUrl={detailImage.image_url}
+              filename={`${detailImage.owner.username}-${detailImage.original_filename}-radsnaps.jpg`}
+              className={
+                "text-xs [&_svg]:h-5 [&_svg]:w-5 md:[&_svg]:h-6 md:[&_svg]:w-6"
+              }
+            />
+            <ButtonSaveToAlbum
+              saved={detailImage.image_saved}
+              image_id={detailImage.id}
+              className={
+                "text-xs [&_svg]:h-5 [&_svg]:w-5 md:[&_svg]:h-6 md:[&_svg]:w-6"
+              }
+            />
+            <ButtonShare
+              className={
+                "text-xs [&_svg]:h-5 [&_svg]:w-5 md:[&_svg]:h-6 md:[&_svg]:w-6"
+              }
+            />
+            <ButtonReportIssue
+              content_type={"image"}
+              content_id={detailImage.id}
+              className={
+                "text-xs [&_svg]:h-5 [&_svg]:w-5 md:[&_svg]:h-6 md:[&_svg]:w-6"
+              }
+            />
+          </div>
+          <div className="space-y-2">
+            <p className="text-lg font-semibold leading-none tracking-tight">
+              Description
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {detailImage.image_description}
+            </p>
           </div>
           <div className="flex justify-between items-center">
             <AvatarUserComponent
@@ -108,13 +125,17 @@ export default function DetailImageComponent({ imageId }) {
             />
             <Button
               size="sm"
+              className="text-xs"
               onClick={() => push(`/profile/${detailImage.owner.username}`)}
             >
               View profile
             </Button>
           </div>
         </div>
-        <CommentSection imageId={imageId} />
+        <CommentSection
+          imageId={imageId}
+          totalComment={detailImage.total_comment}
+        />
       </div>
     </div>
   );

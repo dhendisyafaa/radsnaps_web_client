@@ -18,7 +18,7 @@ export default function HeroSection() {
           every snap
         </span>
       </p>
-      <SeachBarComponent className="max-w-lg" endpoint={"image"} />
+      <SeachBarComponent className="max-w-lg" type={"image"} />
     </div>
   );
 }
